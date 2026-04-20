@@ -298,7 +298,9 @@ function AuxFilter.func(input, env)
             local matched = find_phrase_match(cand.text, auxStr)
             -- 仅词组候选显示命中提示，单字继续沿用“显示全部辅码”。
             if matched and env.show_comment and is_multi_char_text(cand.text) then
-                cand = append_phrase_match_hint(cand, matched.char, auxStr)
+                -- 当前单字的辅助码提示
+                local auxCodes = AuxFilter.comment_db:lookup(matched.char)
+                cand = append_phrase_match_hint(cand, matched.char, auxCodes)
             end
 
             if matched and matched.pos == 1 then
