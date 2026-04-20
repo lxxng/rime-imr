@@ -10,15 +10,9 @@ local Processor = {
             local key_repr = key:repr()
             if key_repr == '0' then
                 if
-                    -- 完整拼音+'0' 触发笔画反查 '`'
-                    #context.input > 0 and #context.input % 3 == 0
-                    and context.input:match('^[0-9]+$')
-                then
-                    context:push_input('`')
-                    return 1
-                end
-                if #context.input >= 4
-                    and context.input:match('^[0-9]+`.*$')
+                    require('imr.utils.pattern').match(context.input, '^([1-9]{2}[0-9])+$')
+                      or
+                    require('imr.utils.pattern').match(context.input, '^([1-9]{2}[0-9])+`$')
                 then
                     context:push_input('`')
                     return 1
