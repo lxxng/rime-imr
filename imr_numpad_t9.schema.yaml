@@ -5,7 +5,6 @@ schema:
   description: |
     PC小键盘九键输入方案
   dependencies:
-    - melt_eng # 英文输入，作为次翻译器挂载到拼音方案
     - imr_numpad_t9_radical_pinyin
     - imr_numpad_t9_user
 
@@ -30,15 +29,10 @@ engine:
   translators:
     - punct_translator
     - script_translator
-    - lua_translator@*date_translator # 时间、日期、星期
-    # - table_translator@melt_eng     # 英文输入
     - table_translator@radical_lookup    # 部件拆字反查
     - table_translator@user_lookup       # 自定义反查
-    - lua_translator@*calc_translator    # 计算器
     - lua_translator@*force_gc           # 暴力 GC
   filters:
-    - simplifier@emoji # Emoji
-    - simplifier@traditionalize # 简繁切换
     - reverse_lookup_filter@radical_reverse_lookup  # 部件拆字滤镜
     - uniquifier # 去重
 
@@ -47,7 +41,6 @@ engine:
 recognizer:
   import_preset: default                # 从 default.yaml 继承通用的
   patterns:                             # 再增加方案专有的：
-    calculator: "^=.+"                 # 响应 lua_translator@*calc_translator，计算器。前缀设定项 calculator/prefix
     radical_lookup: "^77[a-z]+$"        # 响应部件拆字的反查，触发前缀与 radical_lookup/prefix 匹配
     user_lookup: "^77([12345689]+[qwert]?)+$"
 
@@ -60,30 +53,9 @@ translator:
   initial_quality: 1.2         # 拼音的权重应该比英文大
   preedit_format:              # preedit_format 影响到输入框的显示和“Shift+回车”上屏的字符
     - xform/7/'/
-    - xform/([jqxy])v/$1u/     # 显示为 ju qu xu yu
-    # - xform/([nl])v/$1ü/     # 显示为 nü lü
-    # - xform/([nl])ue/$1üe/   # 显示为 nüe lüe
-    - xform/([nl])v/$1v/       # 显示为 nv lv
-    - xform/([nl])ue/$1ve/     # 显示为 nve lve
-    - xform/(?<=[A-Z])\s(?=[A-Z])//  # 消除大写字母之间的空格
 
-
-# 自定义短语：custom_phrase_t9.txt
-# ⚠️ 编码要用数字
-custom_phrase:
-  dictionary: ""
-  user_dict: custom_phrase_t9
-  db_class: stabledb
-  enable_completion: false
-  enable_sentence: false
-  initial_quality: 99
-
-# 九宫格 1 键上的符号序列
 punctuator:
-  half_shape:
-    "1": [1, "@", ".", "/", ":", "_", "-", "#"]
-    "@": [1, "@", ！, ：, 、, ……, ～]
-    "#": [0, "#", "$", "%", "^", "&", "*", "(", ")"]
+  import_preset: default
 
 key_binder:
   bindings:
@@ -149,8 +121,8 @@ key_binder:
     - {accept: KP_Enter, send: Return, when: has_menu}
   import_preset: default
 speller:
-  alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA9876543210
-  initials: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA9876543210
+  alphabet: 123456789
+  initials: 123456789
   delimiter: " 7"        # 系统配置，第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
   algebra:
     - xform/^([a-z]+)$/$1⑤/
@@ -190,16 +162,6 @@ speller:
     - xform/^m$/me/
     - abbrev/^([a-z]).+$/$1/ # 超级简拼
     - abbrev/^([zcs]h).+$/$1/ # 超级简拼中，zh ch sh 视为整体（ch'sh → 城市），而不是像这样分开（c'h's'h → 吃好睡好）。
-    - derive/^([nl])ve$/$1ue/
-    # - derive/^([NL])VE$/$1UE/
-    - derive/^([jqxy])u/$1v/
-    # - derive/^([JQXY])U/$1V/
-    # - xlit/abcdefghijklmnopqrstuvwxyz/88899944455566611112223333/
-    # - derive/([aeiou])ng$/$1gn/
-    # - derive/([dtngkhrzcs])o(u|ng)$/$1o/
-    # - derive/ong$/on/
-    # - derive/ao$/oa/
-    # - derive/([iu])a(o|ng?)$/a$1$2/
     # ### 九宫格数字映射
     # ***  abc def
     # ghi  jkl mno
