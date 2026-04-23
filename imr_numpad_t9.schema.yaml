@@ -59,6 +59,7 @@ translator:
   always_show_comments: true   # corrector.lua ：Rime 默认在 preedit 等于 comment 时取消显示 comment，这里强制一直显示，供 corrector.lua 做判断用。
   initial_quality: 1.2         # 拼音的权重应该比英文大
   preedit_format:              # preedit_format 影响到输入框的显示和“Shift+回车”上屏的字符
+    - xform/7/'/
     - xform/([jqxy])v/$1u/     # 显示为 ju qu xu yu
     # - xform/([nl])v/$1ü/     # 显示为 nü lü
     # - xform/([nl])ue/$1üe/   # 显示为 nüe lüe
@@ -152,7 +153,7 @@ menu:
 speller:
   alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA9876543210
   initials: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA9876543210
-  delimiter: " '"        # 系统配置，第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
+  delimiter: " 7"        # 系统配置，第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
   algebra:
     - xform/^([a-z]+)$/$1⑤/
     - xform/ā([a-z]*)$/a$1①/
