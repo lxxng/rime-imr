@@ -224,6 +224,7 @@ speller:
 radical_lookup:
   tag: radical_lookup
   dictionary: imr_numpad_t9_radical_pinyin
+  enable_sentence: false
   enable_user_dict: false
   prefix: "77"  # 反查前缀（反查时前缀会消失影响打英文所以设定为两个字母，或可改成一个非字母符号），与 recognizer/patterns/radical_lookup 匹配
   comment_format:
@@ -232,6 +233,7 @@ radical_lookup:
 user_lookup:
   tag: user_lookup
   dictionary: imr_numpad_t9_user
+  enable_sentence: false
   enable_user_dict: false
   prefix: "77"  # 反查前缀（反查时前缀会消失影响打英文所以设定为两个字母，或可改成一个非字母符号），与 recognizer/patterns/radical_lookup 匹配
   comment_format:
