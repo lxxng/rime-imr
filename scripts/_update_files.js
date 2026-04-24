@@ -1,20 +1,5 @@
 // 同步远程数据
 
-const files = {
-    'cn_dicts/8105.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/8105.dict.yaml',
-    'cn_dicts/41448.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/41448.dict.yaml',
-    'cn_dicts/base.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/base.dict.yaml',
-    'cn_dicts/ext.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/ext.dict.yaml',
-    'cn_dicts/others.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/others.dict.yaml',
-    'cn_dicts/tencent.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/tencent.dict.yaml',
-    'en_dicts/cn_en_double_pinyin.txt': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/cn_en_double_pinyin.txt',
-    'en_dicts/cn_en.txt': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/cn_en.txt',
-    'en_dicts/en_ext.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/en_ext.dict.yaml',
-    'en_dicts/en.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/en.dict.yaml',
-    'radical_dicts/radical_pinyin.dict.yaml': 'https://raw.githubusercontent.com/mirtlecn/rime-radical-pinyin/master/radical_pinyin.dict.yaml',
-    'radical_dicts/stroke.dict.yaml': 'https://raw.githubusercontent.com/rime/rime-stroke/master/stroke.dict.yaml',
-    'aux_code/ZRM-wanxiang.txt': 'https://raw.githubusercontent.com/HowcanoeWang/rime-lua-aux-code/main/aux_code/ZRM-wanxiang.txt',
-};
 
 const fs = require('fs');
 const path = require('path');
@@ -128,7 +113,7 @@ async function checkAndUpdateFile(projectRelativePath, remoteUrl) {
 }
 
 // 主函数
-async function main() {
+async function update(files) {
     console.log('开始检查并同步文件...');
     console.log(`项目根目录: ${PROJECT_ROOT}`);
     console.log(`共配置了 ${Object.keys(files).length} 个文件\n`);
@@ -151,8 +136,7 @@ async function main() {
     }
 }
 
-// 执行主函数
-main().catch(error => {
-    console.error('❌ 脚本执行出错:', error.message);
-    process.exit(1);
-});
+
+module.exports = {
+    update: update
+}
