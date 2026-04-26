@@ -94,7 +94,7 @@ translator:
   spelling_hints: none
   comment_format: []
 
-  contextual_suggestions: true
+  contextual_suggestions: false
   max_homophones: 9
   max_homographs: 7
 

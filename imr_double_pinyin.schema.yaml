@@ -175,7 +175,7 @@ translator:
     - xform/9/³/
     - xform/0/⁴/
 
-  contextual_suggestions: true
+  contextual_suggestions: false
   max_homophones: 9
   max_homographs: 7
 
