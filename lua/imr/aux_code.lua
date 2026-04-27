@@ -43,6 +43,7 @@ function AuxFilter.init(env)
         { mode = "no_learn", token = env.no_learn_trigger },
         { mode = "learn", token = env.learn_trigger },
     }
+    env.length = 2
 
     local active_triggers = {}
     for _, item in ipairs(env.triggers) do
@@ -140,7 +141,7 @@ local function char_matches_aux(char, auxStr)
         return false
     end
     for part in code:gmatch('%S+') do
-        if part:find(auxStr) then return true end
+        if part:find(auxStr) == 1 then return true end
     end
     return false
 end
