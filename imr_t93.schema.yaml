@@ -171,4 +171,4 @@ aux:
     db: imr_double_pinyin_aux_code
 
 menu:
-  alternative_select_keys: ①②③④⑤⑥⑦⑧⑨⑩
+  alternative_select_keys: ABCDEFGHIJ
