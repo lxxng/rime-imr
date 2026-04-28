@@ -69,35 +69,35 @@ speller:
 
       - xform/<([a-z])>/$1/
     九宫格:
-      # fn* tuw gsa
-      # jyk pix hde
-      # mzc rlq bvo
-      - xform/f/<11>/
-      - xform/n/<12>/
-      - xform/t/<21>/
-      - xform/u/<22>/
-      - xform/w/<23>/
-      - xform/g/<31>/
+      # |by*|kvc|qso|
+      # |fnz|pix|gte|
+      # |jml|ruw|hda|
+      - xform/b/<11>/
+      - xform/y/<12>/
+      - xform/k/<21>/
+      - xform/v/<22>/
+      - xform/c/<23>/
+      - xform/q/<31>/
       - xform/s/<32>/
-      - xform/a/<33>/
-      - xform/j/<41>/
-      - xform/y/<42>/
-      - xform/k/<43>/
+      - xform/o/<33>/
+      - xform/f/<41>/
+      - xform/n/<42>/
+      - xform/z/<43>/
       - xform/p/<51>/
       - xform/i/<52>/
       - xform/x/<53>/
-      - xform/h/<61>/
-      - xform/d/<62>/
+      - xform/g/<61>/
+      - xform/t/<62>/
       - xform/e/<63>/
-      - xform/m/<71>/
-      - xform/z/<72>/
-      - xform/c/<73>/
+      - xform/j/<71>/
+      - xform/m/<72>/
+      - xform/l/<73>/
       - xform/r/<81>/
-      - xform/l/<82>/
-      - xform/q/<83>/
-      - xform/b/<91>/
-      - xform/v/<92>/
-      - xform/o/<93>/
+      - xform/u/<82>/
+      - xform/w/<83>/
+      - xform/h/<91>/
+      - xform/d/<92>/
+      - xform/a/<93>/
 
       - xform/<[1-9]1><[1-9]1>/${0}1/
       - xform/<[1-9]1><[1-9]2>/${0}2/
@@ -170,35 +170,35 @@ translator:
       - xform/(^|[ '])([1-9])([1-9])8/${1}<${2}3><${3}2>/
       - xform/(^|[ '])([1-9])([1-9])9/${1}<${2}3><${3}3>/
       # 九宫格数字映射
-      # mj* buh gqo 
-      # kyn aiw xde
-      # fzr tlp cvs
-      - xform/<11>/f/
-      - xform/<12>/n/
-      - xform/<21>/t/
-      - xform/<22>/u/
-      - xform/<23>/w/
-      - xform/<31>/g/
+      # |by*|kvc|qso|
+      # |fnz|pix|gte|
+      # |jml|ruw|hda|
+      - xform/<11>/b/
+      - xform/<12>/y/
+      - xform/<21>/k/
+      - xform/<22>/v/
+      - xform/<23>/c/
+      - xform/<31>/q/
       - xform/<32>/s/
-      - xform/<33>/a/
-      - xform/<41>/j/
-      - xform/<42>/y/
-      - xform/<43>/k/
+      - xform/<33>/o/
+      - xform/<41>/f/
+      - xform/<42>/n/
+      - xform/<43>/z/
       - xform/<51>/p/
       - xform/<52>/i/
       - xform/<53>/x/
-      - xform/<61>/h/
-      - xform/<62>/d/
+      - xform/<61>/g/
+      - xform/<62>/t/
       - xform/<63>/e/
-      - xform/<71>/m/
-      - xform/<72>/z/
-      - xform/<73>/c/
+      - xform/<71>/j/
+      - xform/<72>/m/
+      - xform/<73>/l/
       - xform/<81>/r/
-      - xform/<82>/l/
-      - xform/<83>/q/
-      - xform/<91>/b/
-      - xform/<92>/v/
-      - xform/<93>/o/
+      - xform/<82>/u/
+      - xform/<83>/w/
+      - xform/<91>/h/
+      - xform/<92>/d/
+      - xform/<93>/a/
 
       # 自然码双拼
       - xform/(^|[ '])aa/${1}a/
