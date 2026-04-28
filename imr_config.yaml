@@ -293,3 +293,18 @@ pin_cand_filter:
     - 666	的 地 得
     # ta
     - 851	他 她 它
+
+octagram: # 语言模型
+  wanxiang: # 万象
+    grammar:
+      language: wanxiang-lts-zh-hans
+      collocation_max_length: 8
+      collocation_min_length: 3
+      collocation_penalty: -10
+      non_collocation_penalty: -5
+      weak_collocation_penalty: -100
+      rear_penalty: -5
+    translator/contextual_suggestions: false
+    translator/max_homophones: 8
+    translator/max_homographs: 8
+

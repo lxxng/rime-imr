@@ -175,10 +175,6 @@ translator:
     - xform/9/³/
     - xform/0/⁴/
 
-  contextual_suggestions: false
-  max_homophones: 9
-  max_homographs: 7
-
 # 次翻译器，英文
 melt_eng:
   dictionary: melt_eng     # 挂载词库 melt_eng.dict.yaml
@@ -306,14 +302,6 @@ speller:
   algebra:
     __include: imr_config:/speller/algebra/imr_double
 
-# 万象
-grammar:
-  language: wanxiang-lts-zh-hans
-  collocation_max_length: 8
-  collocation_min_length: 3
-  collocation_penalty: -8
-  rear_penalty: -18
-
 aux:
   trigger:
     # default: '`'
@@ -323,3 +311,7 @@ aux:
   comment:
     enable: true
     db: imr_double_pinyin_aux_code
+
+__patch:
+  imr_config:/octagram/wanxiang
+

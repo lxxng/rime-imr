@@ -204,3 +204,6 @@ style:
   horizontal: false  # 候选项横排：true；false
 menu:
   page_size: 9  # 候选词个数
+
+__patch:
+  imr_config:/octagram/wanxiang
