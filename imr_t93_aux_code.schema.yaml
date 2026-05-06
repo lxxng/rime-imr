@@ -1,0 +1,9 @@
+# Rime schema settings
+# encoding: utf-8
+
+schema:
+  schema_id: imr_t93_aux_code
+  name: imr-t93-辅助码
+  version: zzz
+translator:
+  dictionary: imr_t93_aux_code

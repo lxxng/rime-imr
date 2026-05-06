@@ -1,0 +1,12 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# imr_double_pinyin的辅助码
+#
+
+---
+name: imr_double_pinyin_aux_code
+version: zzz
+import_tables:
+  - dicts/lookup/ZRM-wanxiang
+...

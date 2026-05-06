@@ -1,0 +1,12 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# imr_t93的辅助码
+#
+
+---
+name: imr_t93_aux_code
+version: zzz
+import_tables:
+  - dicts/lookup/ZRM-wanxiang_t93
+...

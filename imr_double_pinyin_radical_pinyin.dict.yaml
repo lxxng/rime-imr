@@ -1,0 +1,12 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# imr_double_pinyin的拼音反查
+#
+
+---
+name: imr_double_pinyin_radical_pinyin
+version: zzz
+import_tables:
+  - dicts/lookup/radical_pinyin
+...
