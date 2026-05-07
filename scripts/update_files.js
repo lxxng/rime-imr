@@ -11,7 +11,6 @@ const files = {
     'dicts/ice/en.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/en.dict.yaml',
     'dicts/lookup/radical_pinyin.dict.yaml': 'https://raw.githubusercontent.com/mirtlecn/rime-radical-pinyin/master/radical_pinyin.dict.yaml',
     'dicts/lookup/stroke.dict.yaml': 'https://raw.githubusercontent.com/rime/rime-stroke/master/stroke.dict.yaml',
-    'tmp/aux_code/ZRM-wanxiang.txt': 'https://raw.githubusercontent.com/HowcanoeWang/rime-lua-aux-code/main/aux_code/ZRM-wanxiang.txt',
     'dicts/wanxiang/zi.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/zi.dict.yaml',
     'dicts/wanxiang/jichu.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/jichu.dict.yaml',
     'dicts/wanxiang/lianxiang.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/lianxiang.dict.yaml',
@@ -19,6 +18,7 @@ const files = {
     'dicts/wanxiang/duoyin.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/duoyin.dict.yaml',
     'dicts/wanxiang/shici.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/shici.dict.yaml',
     'dicts/wanxiang/diming.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/diming.dict.yaml',
+    'tmp/wanxiang/aux_code.txt': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/custom/aux_code.txt',
     'lua/librime.lua': 'https://raw.githubusercontent.com/hchunhui/librime-lua/master/contrib/librime.lua'
 };
 
