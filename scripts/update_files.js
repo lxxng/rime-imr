@@ -55,4 +55,6 @@ async function updateFiles() {
         process.exit(1);
     }
 }
-updateFiles()
+
+// 导出函数以便在其他脚本中使用
+module.exports = updateFiles;

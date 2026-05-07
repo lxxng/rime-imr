@@ -187,33 +187,37 @@ const files = [
 const fs = require('fs');
 const path = require('path');
 
-files.forEach(file => {
-    const source = file.source;
-    const target = file.target;
-    const transform = file.transform;
-    const source_map = {}
-    Object.keys(source).forEach(source_key => {
-        const source_file = path.join(__dirname, '..', source[source_key]);
-        source_map[source_key] = fs.readFileSync(source_file, 'utf8');
-    })
-    const target_map = transform(source_map)
-    Object.keys(target_map).forEach(target_key => {
-        const target_file = path.join(__dirname, '..', target[target_key].file);
-        fs.writeFileSync(target_file, `# Rime dictionary
-# encoding: utf-8
-# 
+function work() {
+    files.forEach(file => {
+        const source = file.source;
+        const target = file.target;
+        const transform = file.transform;
+        const source_map = {}
+        Object.keys(source).forEach(source_key => {
+            const source_file = path.join(__dirname, '..', source[source_key]);
+            source_map[source_key] = fs.readFileSync(source_file, 'utf8');
+        })
+        const target_map = transform(source_map)
+        Object.keys(target_map).forEach(target_key => {
+            const target_file = path.join(__dirname, '..', target[target_key].file);
+            fs.writeFileSync(target_file, `# Rime dictionary
+    # encoding: utf-8
+    # 
 
----
-name: ${target[target_key].name}
-version: ${target[target_key].version ?? 'zzz'}
-...
-` + target_map[target_key], 'utf8');
-        console.log('文件已成功写入', target_file)
+    ---
+    name: ${target[target_key].name}
+    version: ${target[target_key].version ?? 'zzz'}
+    ...
+    ` + target_map[target_key], 'utf8');
+            console.log('文件已成功写入', target_file)
+        })
+        //     const source_lineses = source_file.map(file => {
+        //         const context = fs.readFileSync(file, 'utf8');
+        //         return context.split('\n');
+        //     })
+        //     const target_lines = transform(source_lineses)
+        //     // 写入新文件
     })
-    //     const source_lineses = source_file.map(file => {
-    //         const context = fs.readFileSync(file, 'utf8');
-    //         return context.split('\n');
-    //     })
-    //     const target_lines = transform(source_lineses)
-    //     // 写入新文件
-})
+}
+
+module.exports = work;
