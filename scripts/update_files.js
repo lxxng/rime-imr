@@ -37,17 +37,17 @@ const checkAndUpdateFile = require(path.join(PROJECT_ROOT, 'scripts', '_remote_c
 async function updateFiles() {
     console.log('开始检查并同步文件...');
     console.log(`共配置了 ${Object.keys(files).length} 个文件\n`);
-    
+
     let successCount = 0;
     let totalCount = 0;
-    
+
     // 遍历所有配置的文件
     for (const [projectRelativePath, remoteUrl] of Object.entries(files)) {
         totalCount++;
         const success = await checkAndUpdateFile(remoteUrl, projectRelativePath);
         if (success) successCount++;
     }
-    
+
     console.log(`\n====================`);
     console.log(`同步完成! 成功: ${successCount}/${totalCount} 个文件`);
     if (successCount < totalCount) {
@@ -58,3 +58,6 @@ async function updateFiles() {
 
 // 导出函数以便在其他脚本中使用
 module.exports = updateFiles;
+if (require.main === module) {
+    updateFiles();
+}

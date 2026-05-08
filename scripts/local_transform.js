@@ -200,15 +200,17 @@ function work() {
         const target_map = transform(source_map)
         Object.keys(target_map).forEach(target_key => {
             const target_file = path.join(__dirname, '..', target[target_key].file);
-            fs.writeFileSync(target_file, `# Rime dictionary
-    # encoding: utf-8
-    # 
-
-    ---
-    name: ${target[target_key].name}
-    version: ${target[target_key].version ?? 'zzz'}
-    ...
-    ` + target_map[target_key], 'utf8');
+            fs.writeFileSync(target_file, [
+                `# Rime dictionary`,
+                `# encoding: utf-8`,
+                `#`,
+                ``,
+                `---`,
+                `name: ${target[target_key].name}`,
+                `version: ${target[target_key].version ?? 'zzz'}`,
+                `...`,
+                target_map[target_key]
+            ].join('\n'), 'utf8');
             console.log('文件已成功写入', target_file)
         })
         //     const source_lineses = source_file.map(file => {
@@ -221,3 +223,6 @@ function work() {
 }
 
 module.exports = work;
+if (require.main === module) {
+    work();
+}
