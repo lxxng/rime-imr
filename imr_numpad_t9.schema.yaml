@@ -6,7 +6,6 @@ schema:
     PC小键盘九键输入方案
   dependencies:
     - imr_numpad_t9_radical_pinyin
-    - imr_numpad_t9_user
 
 engine:
   processors:
@@ -50,6 +49,21 @@ translator:
   initial_quality: 1.2         # 拼音的权重应该比英文大
   preedit_format:              # preedit_format 影响到输入框的显示和“Shift+回车”上屏的字符
     - xform/7/'/
+  comment_format:
+    - xform/^ng(?= |$)/eng/
+    - xform/ ng(?= |$)/ eng/
+    - xform/ńg/éng/
+    - xform/ňg/ěng/
+    - xform/ǹg/èng/
+    - xform/^n(?= |$)/en/
+    - xform/ n(?= |$)/ en/
+    - xform/ń/én/
+    - xform/ň/ěn/
+    - xform/ǹ/èn/
+    - xform/^m(?= |$)/me/
+    - xform/ m(?= |$)/ me/
+    - xform/ḿ/mé/
+    - xform/m̀/mè/
 
 punctuator:
   import_preset: default
@@ -118,67 +132,11 @@ key_binder:
     - {accept: KP_Enter, send: Return, when: has_menu}
   import_preset: default
 speller:
-  alphabet: 123456789qwert
+  alphabet: 123456789abcdefghijklmnopqrstuvwxyz`
   initials: 123456789
   delimiter: " 7"        # 系统配置，第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
   algebra:
-    - xform/^([a-z]+)$/$1⑤/
-    - xform/ā([a-z]*)$/a$1①/
-    - xform/á([a-z]*)$/a$1②/
-    - xform/ǎ([a-z]*)$/a$1③/
-    - xform/à([a-z]*)$/a$1④/
-    - xform/ō([a-z]*)$/o$1①/
-    - xform/ó([a-z]*)$/o$1②/
-    - xform/ǒ([a-z]*)$/o$1③/
-    - xform/ò([a-z]*)$/o$1④/
-    - xform/ē([a-z]*)$/e$1①/
-    - xform/é([a-z]*)$/e$1②/
-    - xform/ě([a-z]*)$/e$1③/
-    - xform/è([a-z]*)$/e$1④/
-    - xform/ī([a-z]*)$/i$1①/
-    - xform/í([a-z]*)$/i$1②/
-    - xform/ǐ([a-z]*)$/i$1③/
-    - xform/ì([a-z]*)$/i$1④/
-    - xform/ū([a-z]*)$/u$1①/
-    - xform/ú([a-z]*)$/u$1②/
-    - xform/ǔ([a-z]*)$/u$1③/
-    - xform/ù([a-z]*)$/u$1④/
-    - xform/ǖ([a-z]*)$/v$1①/
-    - xform/ǘ([a-z]*)$/v$1②/
-    - xform/ǚ([a-z]*)$/v$1③/
-    - xform/ǜ([a-z]*)$/v$1④/
-    - xform/ü/v/
-    - xform/ń([a-z]*)$/n$1②/
-    - xform/ň([a-z]*)$/n$1③/
-    - xform/ǹ([a-z]*)$/n$1④/
-    - xform/ḿ([a-z]*)$/m$1②/
-    - xform/m̀([a-z]*)$/m$1④/
-
-    - derive/^ng$/eng/
-    - xform/^n$/en/
-    - xform/^m$/me/
-    - abbrev/^([a-z]).+$/$1/ # 超级简拼
-    - abbrev/^([zcs]h).+$/$1/ # 超级简拼中，zh ch sh 视为整体（ch'sh → 城市），而不是像这样分开（c'h's'h → 吃好睡好）。
-    # ### 九宫格数字映射
-    # ***  abc def
-    # ghi  jkl mno
-    # pqrs tuv wxyz
-    - xform/[abc]/8/
-    - xform/[def]/9/
-    - xform/[hgi]/4/
-    - xform/[jkl]/5/
-    - xform/[omn]/6/
-    - xform/[pqrs]/1/
-    - xform/[tuv]/2/
-    - xform/[wxyz]/3/
-
-    - derive/①//
-    - derive/②//
-    - derive/③//
-    - derive/④//
-    - derive/⑤//
-    - xlit/①②③④⑤/qwert/
-
+    __include: imr_config:/speller/algebra/imr_numpad_t9
 # 部件拆字反查
 radical_lookup:
   tag: radical_lookup
@@ -200,8 +158,8 @@ radical_reverse_lookup:
   #  - xform/$/)/
 
 # weasel
-style:
-  horizontal: false  # 候选项横排：true；false
+# style:
+#   horizontal: false  # 候选项横排：true；false
 menu:
   page_size: 9  # 候选词个数
 
