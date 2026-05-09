@@ -6,6 +6,7 @@ schema:
     PC小键盘九键输入方案
   dependencies:
     - imr_numpad_t9_radical_pinyin
+    - imr_numpad_t9_reverse_pinyin
 
 engine:
   processors:
@@ -164,5 +165,5 @@ imr_numpad_t9:
       - xform/<5>/0/
       - xform/[0-4]//
 
-__patch:
-  imr_config:/octagram/wanxiang
+# __patch:
+#   imr_config:/octagram/wanxiang

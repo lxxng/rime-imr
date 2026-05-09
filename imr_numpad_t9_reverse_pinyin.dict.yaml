@@ -1,0 +1,13 @@
+# encoding: utf-8
+#
+# imr_numpad_t9的拼音反查
+# 
+#
+
+---
+name: imr_numpad_t9_radical_pinyin
+version: alpha-2025-2026
+use_preset_vocabulary: false
+import_tables:
+  - dicts/lookup/numpad_t9_reverse_pinyin
+...

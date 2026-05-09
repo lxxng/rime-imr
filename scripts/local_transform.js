@@ -4,32 +4,29 @@ const t93_numbers = {
       # |fnz|pix|gte|
       # |jml|ruw|hda|
      */
-    'b': [1, 1],
-    'y': [1, 2],
-    'k': [2, 1],
-    'v': [2, 2],
-    'c': [2, 3],
-    'q': [3, 1],
-    's': [3, 2],
-    'o': [3, 3],
-    'f': [4, 1],
-    'n': [4, 2],
-    'z': [4, 3],
-    'p': [5, 1],
-    'i': [5, 2],
-    'x': [5, 3],
-    'g': [6, 1],
-    't': [6, 2],
-    'e': [6, 3],
-    'j': [7, 1],
-    'm': [7, 2],
-    'l': [7, 3],
-    'r': [8, 1],
-    'u': [8, 2],
-    'w': [8, 3],
-    'h': [9, 1],
-    'd': [9, 2],
-    'a': [9, 3],
+    'b': [1, 1], 'y': [1, 2],
+    'k': [2, 1], 'v': [2, 2], 'c': [2, 3],
+    'q': [3, 1], 's': [3, 2], 'o': [3, 3],
+    'f': [4, 1], 'n': [4, 2], 'z': [4, 3],
+    'p': [5, 1], 'i': [5, 2], 'x': [5, 3],
+    'g': [6, 1], 't': [6, 2], 'e': [6, 3],
+    'j': [7, 1], 'm': [7, 2], 'l': [7, 3],
+    'r': [8, 1], 'u': [8, 2], 'w': [8, 3],
+    'h': [9, 1], 'd': [9, 2], 'a': [9, 3],
+}
+const numpad_t9_numbers = {
+    // ### 小键盘九宫格映射
+    // ***  abc def
+    // ghi  jkl mno
+    // pqrs tuv wxyz
+    'a': 8, 'b': 8, 'c': 8,
+    'd': 9, 'e': 9, 'f': 9,
+    'g': 4, 'h': 4, 'i': 4,
+    'j': 5, 'k': 5, 'l': 5,
+    'm': 6, 'n': 6, 'o': 6,
+    'p': 1, 'q': 1, 'r': 1, 's': 1,
+    't': 2, 'u': 2, 'v': 2,
+    'w': 3, 'x': 3, 'y': 3, 'z': 3,
 }
 function lookup_transform(source_map) {
     const source_lines = source_map.aux_code.split('\n');
@@ -134,55 +131,106 @@ function wanxiang_pro_transform(source_map) {
         })
     return target_map;
 }
+function numpad_t9_reverse_transform(source_map) {
+    const source_lines = source_map.zi.split('\n');
+    let shift = undefined;
+    while ((shift = source_lines.shift()) != '...' && shift != undefined);
+    const target_lines = source_lines
+        .map(source_line => source_line.trim())
+        .filter(source_line => source_line != '')
+        .map(source_line => source_line.split('\t'))
+        .map(([cn, en,]) => {
+            en = en
+                .replace(/[āáǎà]/g, 'a')
+                .replace(/[ēéěè]/g, 'e')
+                .replace(/[īíǐì]/g, 'i')
+                .replace(/[ōóǒò]/g, 'o')
+                .replace(/[ūúǔù]/g, 'u')
+                .replace(/[ǖǘǚǜü]/g, 'v')
+                .replace('ń', 'n')
+                .replace('ň', 'n')
+                .replace('ǹ', 'n')
+                .replace('ḿ', 'm')
+                .replace('m̀', 'm')
+                .replace(/^ng$/g, 'eng')
+                .replace(/^n$/g, 'en')
+                .replace(/^m$/g, 'me')
+            return en
+        })
+        .reduce((acc, current) => {
+            if (acc.indexOf(current) === -1) {
+                acc.push(current);
+            }
+            return acc;
+        }, [])
+        .map(en => {
+            let numbers = [...en].map(en_char => numpad_t9_numbers[en_char]).join('')
+            return [numbers, en].join('\t')
+        })
+    return { reverse: target_lines.join('\n') }
+}
 const files = [
+    // {
+    //     source: {
+    //         aux_code: 'tmp/wanxiang/aux_code.txt',
+    //     },
+    //     target: {
+    //         aux_code: {
+    //             file: 'dicts/lookup/ZRM-wanxiang.dict.yaml',
+    //             name: 'ZRM-wanxiang',
+    //         },
+    //     },
+    //     transform: lookup_transform,
+    // },
+    // {
+    //     source: {
+    //         aux_code: 'dicts/lookup/ZRM-wanxiang.dict.yaml',
+    //     },
+    //     target: {
+    //         aux_code: {
+    //             file: 'dicts/lookup/ZRM-wanxiang_t93.dict.yaml',
+    //             name: 'ZRM-wanxiang_t93',
+    //         },
+    //     },
+    //     transform: lookup_t93_transform,
+    // },
+    // {
+    //     source: {
+    //         aux_code: 'tmp/wanxiang/aux_code.txt',
+    //         zi: 'dicts/wanxiang/zi.dict.yaml',
+    //         jichu: 'dicts/wanxiang/jichu.dict.yaml',
+    //         lianxiang: 'dicts/wanxiang/lianxiang.dict.yaml',
+    //         cuoyin: 'dicts/wanxiang/cuoyin.dict.yaml',
+    //         duoyin: 'dicts/wanxiang/duoyin.dict.yaml',
+    //         shici: 'dicts/wanxiang/shici.dict.yaml',
+    //         diming: 'dicts/wanxiang/diming.dict.yaml',
+    //     },
+    //     target: {
+    //         zi: { file: 'dicts/wanxiang/zi.pro.dict.yaml', name: 'zi' },
+    //         jichu: { file: 'dicts/wanxiang/jichu.pro.dict.yaml', name: 'jichu' },
+    //         lianxiang: { file: 'dicts/wanxiang/lianxiang.pro.dict.yaml', name: 'lianxiang' },
+    //         cuoyin: { file: 'dicts/wanxiang/cuoyin.pro.dict.yaml', name: 'cuoyin' },
+    //         duoyin: { file: 'dicts/wanxiang/duoyin.pro.dict.yaml', name: 'duoyin' },
+    //         shici: { file: 'dicts/wanxiang/shici.pro.dict.yaml', name: 'shici' },
+    //         diming: { file: 'dicts/wanxiang/diming.pro.dict.yaml', name: 'diming' },
+    //     },
+    //     transform: wanxiang_pro_transform,
+    // },
     {
         source: {
-            aux_code: 'tmp/wanxiang/aux_code.txt',
-        },
-        target: {
-            aux_code: {
-                file: 'dicts/lookup/ZRM-wanxiang.dict.yaml',
-                name: 'ZRM-wanxiang',
-            },
-        },
-        transform: lookup_transform,
-    },
-    {
-        source: {
-            aux_code: 'dicts/lookup/ZRM-wanxiang.dict.yaml',
-        },
-        target: {
-            aux_code: {
-                file: 'dicts/lookup/ZRM-wanxiang_t93.dict.yaml',
-                name: 'ZRM-wanxiang_t93',
-            },
-        },
-        transform: lookup_t93_transform,
-    },
-    {
-        source: {
-            aux_code: 'tmp/wanxiang/aux_code.txt',
             zi: 'dicts/wanxiang/zi.dict.yaml',
-            jichu: 'dicts/wanxiang/jichu.dict.yaml',
-            lianxiang: 'dicts/wanxiang/lianxiang.dict.yaml',
-            cuoyin: 'dicts/wanxiang/cuoyin.dict.yaml',
-            duoyin: 'dicts/wanxiang/duoyin.dict.yaml',
-            shici: 'dicts/wanxiang/shici.dict.yaml',
-            diming: 'dicts/wanxiang/diming.dict.yaml',
         },
         target: {
-            zi: { file: 'dicts/wanxiang/zi.pro.dict.yaml', name: 'zi' },
-            jichu: { file: 'dicts/wanxiang/jichu.pro.dict.yaml', name: 'jichu' },
-            lianxiang: { file: 'dicts/wanxiang/lianxiang.pro.dict.yaml', name: 'lianxiang' },
-            cuoyin: { file: 'dicts/wanxiang/cuoyin.pro.dict.yaml', name: 'cuoyin' },
-            duoyin: { file: 'dicts/wanxiang/duoyin.pro.dict.yaml', name: 'duoyin' },
-            shici: { file: 'dicts/wanxiang/shici.pro.dict.yaml', name: 'shici' },
-            diming: { file: 'dicts/wanxiang/diming.pro.dict.yaml', name: 'diming' },
+            reverse: {
+                file: 'dicts/lookup/numpad_t9_reverse_pinyin.dict.yaml',
+                name: 'numpad_t9_reverse_pinyin',
+            },
         },
-        transform: wanxiang_pro_transform,
+        transform: numpad_t9_reverse_transform,
     }
 ]
 
+const { log } = require('console');
 // 读取ZRM_wanxiang.dict.yaml文件并处理
 const fs = require('fs');
 const path = require('path');
