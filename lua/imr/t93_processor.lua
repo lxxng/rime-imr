@@ -1,18 +1,18 @@
+---@param text string
+---@return boolean is_word
+---@return string rest_text
+local function is_word(text)
+    if text:match('^[1-9][0-9][0-9][a-e]') then
+        return true, text:sub(5)
+    end
+    if text:match('^[1-9][0-9][0-9]') then
+        return true, text:sub(4)
+    end
+    return false, text
+end
 ---@param _text string
 ---@return string rest_text
 local function ignore_word(_text)
-    ---@param text string
-    ---@return boolean is_word
-    ---@return string rest_text
-    local function is_word(text)
-        if text:match('^[1-9][0-9][0-9][a-e]') then
-            return true, text:sub(5)
-        end
-        if text:match('^[1-9][0-9][0-9]') then
-            return true, text:sub(4)
-        end
-        return false, text
-    end
     local flag, text = true, _text
     while flag do
         flag, text = is_word(text)
@@ -39,7 +39,7 @@ local Processor = {
             end
             -- 输入的是声调，如果前面的拼音不完整，自动补零
             if key_repr:match('^[a-e]$') then
-                local text = ignore_word(context.input)
+                local text = ignore_word(context.input:sub(1, context.caret_pos))
                 if text:match('^[1-9]$') then
                     context:push_input('00')
                     context:push_input(key_repr)
