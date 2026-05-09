@@ -9,6 +9,7 @@ schema:
 
 engine:
   processors:
+    - lua_processor@*imr.numpad*Processor
     - ascii_composer
     - recognizer
     - key_binder
@@ -31,6 +32,7 @@ engine:
     - lua_translator@*force_gc           # 暴力 GC
   filters:
     - reverse_lookup_filter@radical_reverse_lookup  # 部件拆字滤镜
+    - lua_filter@*imr.numpad*Filter
     - uniquifier # 去重
 
 
@@ -49,6 +51,11 @@ translator:
   initial_quality: 1.2         # 拼音的权重应该比英文大
   preedit_format:              # preedit_format 影响到输入框的显示和“Shift+回车”上屏的字符
     - xform/7/'/
+    - xform/q/¹/
+    - xform/w/²/
+    - xform/e/³/
+    - xform/r/⁴/
+    - xform/t/⁰/
   comment_format:
     __include: imr_config:/translator/comment_format/万象
 
@@ -149,6 +156,13 @@ radical_reverse_lookup:
 #   horizontal: false  # 候选项横排：true；false
 menu:
   page_size: 9  # 候选词个数
+imr_numpad_t9:
+  search_format:
+    __include: imr_config:/speller/algebra/声调
+    __append:
+      - xform/<([1-4])>/$1/
+      - xform/<5>/0/
+      - xform/[0-4]//
 
 __patch:
   imr_config:/octagram/wanxiang
