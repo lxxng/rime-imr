@@ -19,7 +19,7 @@ t9:
 
 schema:
   schema_id: imr_t93
-  name: IMR-九键
+  name: IMR-九键三拼
   version: "alpha"
   author:
     - Dvel

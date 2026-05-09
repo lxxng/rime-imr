@@ -1,6 +1,6 @@
 schema:
   schema_id: imr_numpad_t9
-  name: 小键盘九键
+  name: IMR-小键盘九键
   version: alpha
   description: |
     PC小键盘九键输入方案
