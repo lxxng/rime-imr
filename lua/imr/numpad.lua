@@ -58,8 +58,8 @@ local Processor = {
                     local aux_code = context.input:match('`(.*)')
                     local new_code = ''
 
-                    local input = context.input:match('[^123456789qwert` ]([123456789qwert` ]*)')
-                    local left = input:match('(.*)`.*'):gsub(' ', '')
+                    -- local input = context.input:match('[^123456789qwert` ]([123456789qwert` ]*)')
+                    -- local left = input:match('(.*)`.*'):gsub(' ', '')
                     -- todo: 34664`zi 
 
                     if aux_code == '' then
@@ -153,7 +153,7 @@ local Filter = {
             local first_en = cand.comment:match('^[^ ]*') or cand.comment
             local first_formatted = env.projection:apply(first_en, true)
             if aux_code and #aux_code > 0 then
-                if first_formatted:match(aux_code) then
+                if first_formatted == aux_code then
                     yield(cand)
                 end
             else
