@@ -303,6 +303,22 @@ translator:
       - xform/<3>/³/
       - xform/<4>/⁴/
       - xform/<5>/⁰/
+  comment_format:
+    万象:    
+      - xform/^ng(?= |$)/eng/
+      - xform/ ng(?= |$)/ eng/
+      - xform/ńg/éng/
+      - xform/ňg/ěng/
+      - xform/ǹg/èng/
+      - xform/^n(?= |$)/en/
+      - xform/ n(?= |$)/ en/
+      - xform/ń/én/
+      - xform/ň/ěn/
+      - xform/ǹ/èn/
+      - xform/^m(?= |$)/me/
+      - xform/ m(?= |$)/ me/
+      - xform/ḿ/mé/
+      - xform/m̀/mè/
 pin_cand_filter:
   imr_double: 
     # de

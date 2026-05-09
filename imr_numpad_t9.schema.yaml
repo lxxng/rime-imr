@@ -50,20 +50,7 @@ translator:
   preedit_format:              # preedit_format 影响到输入框的显示和“Shift+回车”上屏的字符
     - xform/7/'/
   comment_format:
-    - xform/^ng(?= |$)/eng/
-    - xform/ ng(?= |$)/ eng/
-    - xform/ńg/éng/
-    - xform/ňg/ěng/
-    - xform/ǹg/èng/
-    - xform/^n(?= |$)/en/
-    - xform/ n(?= |$)/ en/
-    - xform/ń/én/
-    - xform/ň/ěn/
-    - xform/ǹ/èn/
-    - xform/^m(?= |$)/me/
-    - xform/ m(?= |$)/ me/
-    - xform/ḿ/mé/
-    - xform/m̀/mè/
+    __include: imr_config:/translator/comment_format/万象
 
 punctuator:
   import_preset: default

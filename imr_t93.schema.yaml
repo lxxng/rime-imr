@@ -151,6 +151,8 @@ stroke_lookup:
 reverse_lookup:
   tags: [ radical_lookup, stroke_lookup ]
   dictionary: wanxiang
+  comment_format:
+    __include: imr_config:/translator/comment_format/万象
 
 pin_cand_filter:
   __include: imr_config:/pin_cand_filter/imr_t93
