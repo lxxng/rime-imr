@@ -29,6 +29,43 @@ local function to_string(x, seen)
         return "<" .. t .. ": " .. tostring(x) .. ">"
     end
 end
+-- 查找下一个
+local function lookup_next(db, right_number, en_code)
+    local code = right_number:match('[12345689]+[qwert]?')
+    local flag = false
+    local code_len = #code > 7 and 7 or #code
+    while code_len > 0 do
+        local number_code = code:sub(1, code_len)
+        local has_tone = false
+        if number_code:sub(code_len, code_len):match('[qwert]') then
+            has_tone = true
+        end
+        local en_codes = db:lookup(number_code)
+        if en_code == nil or en_code == '' or flag then
+            local first_lookup = en_codes:match('[a-z]+[0-4]?')
+            if first_lookup ~= nil then
+                return first_lookup
+            end
+        else
+            local _, _end = string.find(' ' .. en_codes .. ' ', ' ' .. en_code .. ' ')
+            if _end ~= nil then
+                local _right = string.sub(' ' .. en_codes, _end + 1, #en_codes + 2)
+                local matched = _right:match('[a-z]+[0-4]?')
+                if matched ~= nil then
+                    return matched
+                else
+                    flag = true
+                end
+            end
+        end
+
+        if has_tone then
+            code_len = code_len - 1
+        end
+        code_len = code_len - 1
+    end
+    return nil
+end
 local Processor = {
     init = function(env)
         env.db = ReverseLookup('imr_numpad_t9_reverse_pinyin')
@@ -49,120 +86,30 @@ local Processor = {
                     return 1
                 end
             end
-            -- Tab/Shift+Tab选词
-            if key_repr == 'Tab' or key_repr == 'Shift+Tab' then
-                if context.input:match('`') then
-                    -- " aa bb cc dd "
-                    local data = context:get_property('pinyin_list')
-
-                    local aux_code = context.input:match('`(.*)')
-                    local new_code = ''
-
-                    -- local input = context.input:match('[^123456789qwert` ]([123456789qwert` ]*)')
-                    -- local left = input:match('(.*)`.*'):gsub(' ', '')
-                    -- todo: 34664`zi 
-
-                    if aux_code == '' then
-                        if key_repr == 'Tab' then
-                            -- 查第一个
-                            -- 空格+非空格开头, 查找" aa", 匹配"aa"
-                            new_code = data:match('^ ([^ ]*)')
-                        end
-                        if key_repr == 'Shift+Tab' then
-                            -- 查最后一个
-                            -- 非空格+空格结尾, 查找"dd ", 匹配"dd"
-                            new_code = data:match('([^ ]*) $')
-                        end
-                    else
-                        if key_repr == 'Tab' then
-                            -- 查后一个
-                            -- 空格+上一个+空格+非空格+空格, 查找" aa bb ", 匹配"bb"
-                            new_code = data:match(' ' .. aux_code .. ' ([^ ]*) ')
-                            if new_code == nil then
-                                -- 如果已经到了结尾, 查第一个
-                                new_code = data:match('^ ([^ ]*)')
-                            end
-                            context:pop_input(#aux_code)
-                        end
-                        if key_repr == 'Shift+Tab' then
-                            -- 查前一个
-                            -- 空格+非空格+空格+上一个+空格, 查找" cc dd ", 匹配"cc"
-                            new_code = data:match(' ([^ ]*) ' .. aux_code .. ' ')
-                            if new_code == nil then
-                                -- 如果已经到了开头, 查最后一个
-                                new_code = data:match(' ([^ ]*) $')
-                            end
-                            context:pop_input(#aux_code)
-                        end
-                    end
-                    context:push_input(new_code)
-                else
-                    -- 第一次按Tab/Shift+Tab, 开启选拼音
-                    local code = context:get_preedit().text
-                        :gsub(' ', '')
-                        :match('[^12345689]*([12345689]*)')
-                    local pinyin_list = ''
-                    for len = 6, 1, -1 do
-                        if #code >= len then
-                            local result = env.db:lookup(code:sub(1, len))
-                            if #result > 0 then
-                                pinyin_list = pinyin_list .. ' ' .. result
-                            end
-                        end
-                    end
-                    pinyin_list = pinyin_list .. ' '
-                    context:set_property('pinyin_list', pinyin_list)
-                    context:push_input('`')
+            if key_repr == 'Tab' or key_repr == 'Shift+Taab' then
+                local start = context:get_selected_candidate().start + 1
+                local left_input = context.input:sub(1, start - 1)
+                local right_input = context.input:sub(start, #context.input)
+                local en_code = right_input:match("'([a-z]*[12340]?)'")
+                if en_code then
+                    local number_code = env.db:lookup(en_code)
+                    right_input = number_code .. right_input:sub(#en_code + 3, #right_input)
                 end
+                local code = lookup_next(env.db, right_input, en_code)
+                if code == nil then
+                    context.input = left_input .. right_input
+                else
+                    context.input = left_input
+                        .. "'" .. code .. "'"
+                        .. right_input:sub(#code + 1, #right_input)
+                end
+
                 return 1
             end
         end
         return 2
     end,
 }
-local Filter = {
-    init = function(env)
-        local config = env.engine.schema.config
-        local format = config:get_list('imr_numpad_t9/search_format')
-        env.projection = Projection()
-        env.projection:load(format)
-
-
-        env.notifier = env.engine.context.select_notifier:connect(function(ctx)
-            local input = ctx.input
-            local preedit = ctx:get_preedit()
-            local removeAuxInput = input:match('([^,]+)`')
-            local reeditTextFront = preedit.text:match('([^,]+)`')
-            if not removeAuxInput then
-                return
-            end
-            ctx.input = removeAuxInput
-            if reeditTextFront and reeditTextFront:match("[a-z0-9]") then
-            else
-                ctx:commit()
-            end
-        end)
-    end,
-    fini = function(env)
-        env.notifier:disconnect()
-    end,
-    func = function(input, env)
-        local context_input = env.engine.context.input
-        local aux_code = context_input:match('`(.*)')
-        for cand in input:iter() do
-            local first_en = cand.comment:match('^[^ ]*') or cand.comment
-            local first_formatted = env.projection:apply(first_en, true)
-            if aux_code and #aux_code > 0 then
-                if first_formatted == aux_code then
-                    yield(cand)
-                end
-            else
-                yield(cand)
-            end
-        end
-    end
-}
 return {
     Processor = Processor,
-    Filter = Filter,
 }

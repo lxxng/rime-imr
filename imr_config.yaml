@@ -151,20 +151,33 @@ speller:
         # ***  abc def
         # ghi  jkl mno
         # pqrs tuv wxyz
-        - xform/[abc]/8/
-        - xform/[def]/9/
-        - xform/[hgi]/4/
-        - xform/[jkl]/5/
-        - xform/[omn]/6/
-        - xform/[pqrs]/1/
-        - xform/[tuv]/2/
-        - xform/[wxyz]/3/
 
-        - xform/<1>/q/
-        - xform/<2>/w/
-        - xform/<3>/e/
-        - xform/<4>/r/
-        - xform/<5>/t/
+        # derive 允许英文拼音
+        - derive/[abc]/8/
+        - derive/[def]/9/
+        - derive/[hgi]/4/
+        - derive/[jkl]/5/
+        - derive/[omn]/6/
+        - derive/[pqrs]/1/
+        - derive/[tuv]/2/
+        - derive/[wxyz]/3/
+        # 只允许纯数字或纯英文
+        - erase/.*[1-9].*[a-z].*/
+        - erase/.*[a-z][^<]*[1-9].*/
+        # 英文前后加'
+        - xform/([a-z]+(<[1-5]>)?)/'${1}'/
+
+        - xform/([1-9]+)<1>/${1}q/
+        - xform/([1-9]+)<2>/${1}w/
+        - xform/([1-9]+)<3>/${1}e/
+        - xform/([1-9]+)<4>/${1}r/
+        - xform/([1-9]+)<5>/${1}t/
+
+        - xform/([a-z]+)<1>/${1}1/
+        - xform/([a-z]+)<2>/${1}2/
+        - xform/([a-z]+)<3>/${1}3/
+        - xform/([a-z]+)<4>/${1}4/
+        - xform/([a-z]+)<5>/${1}0/
     radical_double:
       __include: speller/algebra/自然码
       __append: # 去掉分隔符

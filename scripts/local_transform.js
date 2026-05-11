@@ -135,38 +135,71 @@ function numpad_t9_reverse_transform(source_map) {
     const source_lines = source_map.zi.split('\n');
     let shift = undefined;
     while ((shift = source_lines.shift()) != '...' && shift != undefined);
+    const tones = ['t', 'q', 'w', 'e', 'r']
     const target_lines = source_lines
         .map(source_line => source_line.trim())
         .filter(source_line => source_line != '')
         .map(source_line => source_line.split('\t'))
         .map(([cn, en,]) => {
-            en = en
-                .replace(/[āáǎà]/g, 'a')
-                .replace(/[ēéěè]/g, 'e')
-                .replace(/[īíǐì]/g, 'i')
-                .replace(/[ōóǒò]/g, 'o')
-                .replace(/[ūúǔù]/g, 'u')
-                .replace(/[ǖǘǚǜü]/g, 'v')
-                .replace('ń', 'n')
-                .replace('ň', 'n')
-                .replace('ǹ', 'n')
-                .replace('ḿ', 'm')
-                .replace('m̀', 'm')
+            let en_tone = en
+                .replace('ü', 'v')
+                .replace(/^([a-z]*)$/g, '$1/0')
+                .replace(/ā(.*)$/g, 'a$1/1')
+                .replace(/á(.*)$/g, 'a$1/2')
+                .replace(/ǎ(.*)$/g, 'a$1/3')
+                .replace(/à(.*)$/g, 'a$1/4')
+                .replace(/ē(.*)$/g, 'e$1/1')
+                .replace(/é(.*)$/g, 'e$1/2')
+                .replace(/ě(.*)$/g, 'e$1/3')
+                .replace(/è(.*)$/g, 'e$1/4')
+                .replace(/ī(.*)$/g, 'i$1/1')
+                .replace(/í(.*)$/g, 'i$1/2')
+                .replace(/ǐ(.*)$/g, 'i$1/3')
+                .replace(/ì(.*)$/g, 'i$1/4')
+                .replace(/ō(.*)$/g, 'o$1/1')
+                .replace(/ó(.*)$/g, 'o$1/2')
+                .replace(/ǒ(.*)$/g, 'o$1/3')
+                .replace(/ò(.*)$/g, 'o$1/4')
+                .replace(/ū(.*)$/g, 'u$1/1')
+                .replace(/ú(.*)$/g, 'u$1/2')
+                .replace(/ǔ(.*)$/g, 'u$1/3')
+                .replace(/ù(.*)$/g, 'u$1/4')
+                .replace(/ǖ(.*)$/g, 'v$1/1')
+                .replace(/ǘ(.*)$/g, 'v$1/2')
+                .replace(/ǚ(.*)$/g, 'v$1/3')
+                .replace(/ǜ(.*)$/g, 'v$1/4')
+                .replace(/ń(.*)$/g, 'n$1/2')
+                .replace(/ň(.*)$/g, 'n$1/3')
+                .replace(/ǹ(.*)$/g, 'n$1/4')
+                .replace(/ḿ(.*)$/g, 'm$1/2')
+                .replace(/m̀(.*)$/g, 'm$1/4')
                 .replace(/^ng$/g, 'eng')
                 .replace(/^n$/g, 'en')
                 .replace(/^m$/g, 'me')
-            return en
+                .replace('/', '')
+            return en_tone
         })
+        .map(en_tone => {
+            let en = en_tone.slice(0, -1)
+            let tone = Number(en_tone.slice(-1))
+            if(Number.isNaN(tone)) {
+                console.log(en_tone)
+            }
+            let numbers = [...en].map(en_char => numpad_t9_numbers[en_char]).join('')
+            return [
+                [numbers + tones[tone], en + tone].join('\t'),
+                [numbers, en].join('\t'),
+                [en + tone, numbers + tones[tone]].join('\t'),
+                [en, numbers].join('\t'),
+            ]
+        })
+        .flatMap(item => item)
         .reduce((acc, current) => {
             if (acc.indexOf(current) === -1) {
                 acc.push(current);
             }
             return acc;
         }, [])
-        .map(en => {
-            let numbers = [...en].map(en_char => numpad_t9_numbers[en_char]).join('')
-            return [numbers, en].join('\t')
-        })
     return { reverse: target_lines.join('\n') }
 }
 const files = [
