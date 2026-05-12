@@ -38,14 +38,14 @@ local function lookup_next(db, right_number, en_code)
         local number_code = code:sub(1, code_len)
         local en_codes = db:lookup(number_code)
         if en_code == nil or en_code == '' or flag then
-            local first_lookup = en_codes:match('[a-z]+[0-4]?')
+            local first_lookup = en_codes:match('[a-z]+[1-5]?')
             if first_lookup ~= nil then
                 return first_lookup
             end
         else
             local _, _end = string.find(' ' .. en_codes .. ' ', ' ' .. en_code .. ' ')
             if _end ~= nil then
-                local matched = string.match(en_codes, '[a-z]+[0-4]?', _end)
+                local matched = string.match(en_codes, '[a-z]+[1-5]?', _end)
                 if matched ~= nil then
                     return matched
                 end
@@ -75,14 +75,14 @@ local function lookup_back(db, right_number, en_code)
 
         local en_codes = db:lookup(number_code)
         if en_code == nil or en_code == '' or flag then
-            local first_lookup = en_codes:reverse():match('[0-4]?[a-z]+')
+            local first_lookup = en_codes:reverse():match('[1-5]?[a-z]+')
             if first_lookup ~= nil then
                 return first_lookup:reverse()
             end
         else
             local _start, _ = string.find(' ' .. en_codes .. ' ', ' ' .. en_code .. ' ')
             if _start ~= nil then
-                local matched = en_codes:reverse():match('[0-4]?[a-z]+', #en_codes - _start + 2)
+                local matched = en_codes:reverse():match('[1-5]?[a-z]+', #en_codes - _start + 2)
                 if matched ~= nil then
                     return matched:reverse()
                 end
@@ -118,7 +118,7 @@ local Processor = {
                 local start = context:get_selected_candidate().start + 1
                 local left_input = context.input:sub(1, start - 1)
                 local right_input = context.input:sub(start, #context.input)
-                local en_code = right_input:match("'([a-z]*[12340]?)'")
+                local en_code = right_input:match("'([a-z]*[1-5]?)'")
                 if en_code then
                     local number_code = env.db:lookup(en_code)
                     right_input = number_code .. right_input:sub(#en_code + 3, #right_input)

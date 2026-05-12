@@ -50,52 +50,7 @@ translator:
   always_show_comments: true   # corrector.lua ：Rime 默认在 preedit 等于 comment 时取消显示 comment，这里强制一直显示，供 corrector.lua 做判断用。
   initial_quality: 1.2         # 拼音的权重应该比英文大
   preedit_format:              # preedit_format 影响到输入框的显示和“Shift+回车”上屏的字符
-    - xform/7/'/
-    - xform/([12345689])q/${1}¹/
-    - xform/([12345689])w/${1}²/
-    - xform/([12345689])e/${1}³/
-    - xform/([12345689])r/${1}⁴/
-    - xform/([12345689])t/${1}⁰/
-    - xform/a([a-z]*)1'/ā${1}'/
-    - xform/a([a-z]*)2'/á${1}'/
-    - xform/a([a-z]*)3'/ǎ${1}'/
-    - xform/a([a-z]*)4'/à${1}'/
-
-    - xform/e([a-z]*)1'/ē${1}'/
-    - xform/e([a-z]*)2'/é${1}'/
-    - xform/e([a-z]*)3'/ě${1}'/
-    - xform/e([a-z]*)4'/è${1}'/
-  
-    - xform/iu1'/iū'/
-    - xform/iu2'/iú'/
-    - xform/iu3'/iǔ'/
-    - xform/iu4'/iù'/
-
-    - xform/i([a-z]*)1'/ī${1}'/
-    - xform/i([a-z]*)2'/í${1}'/
-    - xform/i([a-z]*)3'/ǐ${1}'/
-    - xform/i([a-z]*)4'/ì${1}'/
-
-    - xform/o([a-z]*)1'/ō${1}'/
-    - xform/o([a-z]*)2'/ó${1}'/
-    - xform/o([a-z]*)3'/ǒ${1}'/
-    - xform/o([a-z]*)4'/ò${1}'/
-
-    - xform/u([a-z]*)1'/ū${1}'/
-    - xform/u([a-z]*)2'/ú${1}'/
-    - xform/u([a-z]*)3'/ǔ${1}'/
-    - xform/u([a-z]*)4'/ù${1}'/
-                             
-    - xform/ü([a-z]*)1'/ǖ${1}'/
-    - xform/ü([a-z]*)2'/ǘ${1}'/
-    - xform/ü([a-z]*)3'/ǚ${1}'/
-    - xform/ü([a-z]*)4'/ǜ${1}'/
-    
-    - xform/([a-z])1'/${1}¹'/
-    - xform/([a-z])2'/${1}²'/
-    - xform/([a-z])3'/${1}³'/
-    - xform/([a-z])4'/${1}⁴'/
-    - xform/([a-z])0'/${1}⁰'/
+    __include: imr_config:/translator/preedit_format/imr_numpad_t9
   comment_format:
     __include: imr_config:/translator/comment_format/万象
 
@@ -204,5 +159,5 @@ imr_numpad_t9:
       - xform/<5>/0/
       - xform/[0-4]//
 
-# __patch:
-#   imr_config:/octagram/wanxiang
+__patch:
+  imr_config:/octagram/wanxiang

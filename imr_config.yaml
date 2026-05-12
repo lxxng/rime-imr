@@ -190,54 +190,7 @@ speller:
           - xform/'//
 translator:
   preedit_format:
-    imr_t93:
-      - xform/a/<1>/
-      - xform/b/<2>/
-      - xform/c/<3>/
-      - xform/d/<4>/
-      - xform/e/<5>/
-
-      # 第三键
-      - xform/(^|[ '])([1-9])([1-9])1/${1}<${2}1><${3}1>/
-      - xform/(^|[ '])([1-9])([1-9])2/${1}<${2}1><${3}2>/
-      - xform/(^|[ '])([1-9])([1-9])3/${1}<${2}1><${3}3>/
-      - xform/(^|[ '])([1-9])([1-9])4/${1}<${2}2><${3}1>/
-      - xform/(^|[ '])([1-9])([1-9])5/${1}<${2}2><${3}2>/
-      - xform/(^|[ '])([1-9])([1-9])6/${1}<${2}2><${3}3>/
-      - xform/(^|[ '])([1-9])([1-9])7/${1}<${2}3><${3}1>/
-      - xform/(^|[ '])([1-9])([1-9])8/${1}<${2}3><${3}2>/
-      - xform/(^|[ '])([1-9])([1-9])9/${1}<${2}3><${3}3>/
-      # 九宫格数字映射
-      # |by*|kvc|qso|
-      # |fnz|pix|gte|
-      # |jml|ruw|hda|
-      - xform/<11>/b/
-      - xform/<12>/y/
-      - xform/<21>/k/
-      - xform/<22>/v/
-      - xform/<23>/c/
-      - xform/<31>/q/
-      - xform/<32>/s/
-      - xform/<33>/o/
-      - xform/<41>/f/
-      - xform/<42>/n/
-      - xform/<43>/z/
-      - xform/<51>/p/
-      - xform/<52>/i/
-      - xform/<53>/x/
-      - xform/<61>/g/
-      - xform/<62>/t/
-      - xform/<63>/e/
-      - xform/<71>/j/
-      - xform/<72>/m/
-      - xform/<73>/l/
-      - xform/<81>/r/
-      - xform/<82>/u/
-      - xform/<83>/w/
-      - xform/<91>/h/
-      - xform/<92>/d/
-      - xform/<93>/a/
-
+    自然码:
       # 自然码双拼
       - xform/(^|[ '])aa/${1}a/
       - xform/(^|[ '])ee/${1}e/
@@ -274,8 +227,8 @@ translator:
       - xform/(^|[ '])u/${1}sh/
       - xform/([jqxy])v/${1}u/
       - xform/([nl])v/${1}ü/
-      - xform/(?<=[A-Z])\s(?=[A-Z])//  # 消除大写字母之间的空格
-      
+      - xform/(?<=[A-Z])\s(?=[A-Z])// # 消除大写字母之间的空格
+    声调:
       - xform/a([a-z]*)<1>/ā${1}/
       - xform/a([a-z]*)<2>/á${1}/
       - xform/a([a-z]*)<3>/ǎ${1}/
@@ -285,7 +238,7 @@ translator:
       - xform/e([a-z]*)<2>/é${1}/
       - xform/e([a-z]*)<3>/ě${1}/
       - xform/e([a-z]*)<4>/è${1}/
-    
+
       - xform/iu<1>/iū/
       - xform/iu<2>/iú/
       - xform/iu<3>/iǔ/
@@ -310,14 +263,81 @@ translator:
       - xform/ü([a-z]*)<2>/ǘ${1}/
       - xform/ü([a-z]*)<3>/ǚ${1}/
       - xform/ü([a-z]*)<4>/ǜ${1}/
-      
+
       - xform/<1>/¹/
       - xform/<2>/²/
       - xform/<3>/³/
       - xform/<4>/⁴/
       - xform/<5>/⁰/
+    初始化:
+      imr_t93:
+        - xform/a/<1>/
+        - xform/b/<2>/
+        - xform/c/<3>/
+        - xform/d/<4>/
+        - xform/e/<5>/
+        # 第三键
+        - xform/(^|[ '])([1-9])([1-9])1/${1}<${2}1><${3}1>/
+        - xform/(^|[ '])([1-9])([1-9])2/${1}<${2}1><${3}2>/
+        - xform/(^|[ '])([1-9])([1-9])3/${1}<${2}1><${3}3>/
+        - xform/(^|[ '])([1-9])([1-9])4/${1}<${2}2><${3}1>/
+        - xform/(^|[ '])([1-9])([1-9])5/${1}<${2}2><${3}2>/
+        - xform/(^|[ '])([1-9])([1-9])6/${1}<${2}2><${3}3>/
+        - xform/(^|[ '])([1-9])([1-9])7/${1}<${2}3><${3}1>/
+        - xform/(^|[ '])([1-9])([1-9])8/${1}<${2}3><${3}2>/
+        - xform/(^|[ '])([1-9])([1-9])9/${1}<${2}3><${3}3>/
+        # 九宫格数字映射
+        # |by*|kvc|qso|
+        # |fnz|pix|gte|
+        # |jml|ruw|hda|
+        - xform/<11>/b/
+        - xform/<12>/y/
+        - xform/<21>/k/
+        - xform/<22>/v/
+        - xform/<23>/c/
+        - xform/<31>/q/
+        - xform/<32>/s/
+        - xform/<33>/o/
+        - xform/<41>/f/
+        - xform/<42>/n/
+        - xform/<43>/z/
+        - xform/<51>/p/
+        - xform/<52>/i/
+        - xform/<53>/x/
+        - xform/<61>/g/
+        - xform/<62>/t/
+        - xform/<63>/e/
+        - xform/<71>/j/
+        - xform/<72>/m/
+        - xform/<73>/l/
+        - xform/<81>/r/
+        - xform/<82>/u/
+        - xform/<83>/w/
+        - xform/<91>/h/
+        - xform/<92>/d/
+        - xform/<93>/a/
+      imr_numpad_t9:
+        - xform/([a-z]+)([1-4])/'${1}<${2}>'/
+    imr_t93:
+      __include: translator/preedit_format/初始化/imr_t93
+      __append:
+        __include: translator/preedit_format/自然码
+        __append:
+          __include: translator/preedit_format/声调
+    imr_numpad_t9:
+      __include: translator/preedit_format/初始化/imr_numpad_t9
+      __append:
+        __include: translator/preedit_format/声调
+        __append: 
+          - xform/'(.*)'/【${1}】/
+          - xform/7/'/
+          - xform/([1-9])q/${1}¹/
+          - xform/([1-9])w/${1}²/
+          - xform/([1-9])e/${1}³/
+          - xform/([1-9])r/${1}⁴/
+          - xform/([1-9])t/${1}⁰/
   comment_format:
-    万象:    
+    万象:
       - xform/^ng(?= |$)/eng/
       - xform/ ng(?= |$)/ eng/
       - xform/ńg/éng/
@@ -333,7 +353,7 @@ translator:
       - xform/ḿ/mé/
       - xform/m̀/mè/
 pin_cand_filter:
-  imr_double: 
+  imr_double:
     # de
     - d	的
     - de	的 地 得
@@ -360,4 +380,3 @@ octagram: # 语言模型
     translator/contextual_suggestions: false
     translator/max_homophones: 8
     translator/max_homographs: 8
-
