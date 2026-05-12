@@ -173,7 +173,7 @@ speller:
         - xform/([1-9]+)<4>/${1}r/
         - xform/([1-9]+)<5>/${1}t/
 
-        - xform/([a-z]+)<[1-5]>/${1}${2}/
+        - xform/([a-z]+)<([1-5])>/${1}${2}/
     radical_double:
       __include: speller/algebra/自然码
       __append: # 去掉分隔符
