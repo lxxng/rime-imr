@@ -135,7 +135,7 @@ function numpad_t9_reverse_transform(source_map) {
     const source_lines = source_map.zi.split('\n');
     let shift = undefined;
     while ((shift = source_lines.shift()) != '...' && shift != undefined);
-    const tones = ['t', 'q', 'w', 'e', 'r']
+    const tones = [, 'q', 'w', 'e', 'r', 't']
     const target_lines = source_lines
         .map(source_line => source_line.trim())
         .filter(source_line => source_line != '')
