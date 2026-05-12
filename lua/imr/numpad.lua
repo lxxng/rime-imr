@@ -36,10 +36,6 @@ local function lookup_next(db, right_number, en_code)
     local code_len = #code > 7 and 7 or #code
     while code_len > 0 do
         local number_code = code:sub(1, code_len)
-        local has_tone = false
-        if number_code:sub(code_len, code_len):match('[qwert]') then
-            has_tone = true
-        end
         local en_codes = db:lookup(number_code)
         if en_code == nil or en_code == '' or flag then
             local first_lookup = en_codes:match('[a-z]+[0-4]?')
@@ -49,17 +45,15 @@ local function lookup_next(db, right_number, en_code)
         else
             local _, _end = string.find(' ' .. en_codes .. ' ', ' ' .. en_code .. ' ')
             if _end ~= nil then
-                local _right = string.sub(' ' .. en_codes, _end + 1, #en_codes + 2)
-                local matched = _right:match('[a-z]+[0-4]?')
+                local matched = string.match(' ' .. en_codes, '[a-z]+[0-4]?', _end + 1)
                 if matched ~= nil then
                     return matched
-                else
-                    flag = true
                 end
+                flag = true
             end
         end
-
-        if has_tone then
+        -- 最后一个是声调, 额外减一 (只正常减一的是同拼音无声调, 应过滤)
+        if number_code:sub(code_len, code_len):match('[qwert]') then
             code_len = code_len - 1
         end
         code_len = code_len - 1
