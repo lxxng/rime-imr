@@ -113,6 +113,11 @@ return {
                 if key_repr:match('^[qwert]$') then
                     -- 输入声调且前面也是声调时, 覆盖前面的声调
                     if context.input:sub(context.caret_pos, context.caret_pos):match('[qwert]') then
+                        -- 声调一致，取消声调
+                        if context.input:sub(context.caret_pos, context.caret_pos) == key_repr then
+                            context:pop_input(1)
+                            return 1
+                        end
                         context:pop_input(1)
                         context:push_input(key_repr)
                         return 1
