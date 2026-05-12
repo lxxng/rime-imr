@@ -235,6 +235,11 @@ translator:
       - xform/e([a-z]*)<3>/ě${1}/
       - xform/e([a-z]*)<4>/è${1}/
 
+      - xform/o([a-z]*)<1>/ō${1}/
+      - xform/o([a-z]*)<2>/ó${1}/
+      - xform/o([a-z]*)<3>/ǒ${1}/
+      - xform/o([a-z]*)<4>/ò${1}/      
+
       - xform/iu<1>/iū/
       - xform/iu<2>/iú/
       - xform/iu<3>/iǔ/
@@ -244,11 +249,6 @@ translator:
       - xform/i([a-z]*)<2>/í${1}/
       - xform/i([a-z]*)<3>/ǐ${1}/
       - xform/i([a-z]*)<4>/ì${1}/
-
-      - xform/o([a-z]*)<1>/ō${1}/
-      - xform/o([a-z]*)<2>/ó${1}/
-      - xform/o([a-z]*)<3>/ǒ${1}/
-      - xform/o([a-z]*)<4>/ò${1}/
 
       - xform/u([a-z]*)<1>/ū${1}/
       - xform/u([a-z]*)<2>/ú${1}/
