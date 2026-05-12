@@ -32,6 +32,9 @@ end
 -- 查找下一个
 local function lookup_next(db, right_number, en_code)
     local code = right_number:match('[12345689]+[qwert]?')
+    if code == nil then
+        return nil
+    end
     local flag = false
     local code_len = #code > 7 and 7 or #code
     while code_len > 0 do
@@ -63,6 +66,9 @@ end
 
 local function lookup_back(db, right_number, en_code)
     local code = right_number:match('[12345689]+[qwert]?')
+    if code == nil then
+        return nil
+    end
     local flag = false
     local code_len_max = #code > 7 and 7 or #code
     local code_len = 0
@@ -94,55 +100,71 @@ local function lookup_back(db, right_number, en_code)
     end
     return nil
 end
-local Processor = {
+return {
     init = function(env)
         env.db = ReverseLookup('imr_numpad_t9_reverse_pinyin')
     end,
     func = function(key, env)
         local engine = env.engine
         local context = env.engine.context
-        if
-            not key:release()
-            and (context:is_composing() or context:has_menu())
-        then
+        if not key:release() then
             local key_repr = key:repr()
-            if key_repr:match('^[qwert]$') then
-                -- 输入声调且前面也是声调时, 覆盖前面的声调
-                if context.input:sub(context.caret_pos, context.caret_pos):match('[qwert]') then
-                    context:pop_input(1)
-                    context:push_input(key_repr)
+            if context:is_composing() or context:has_menu() then
+                if key_repr:match('^[qwert]$') then
+                    -- 输入声调且前面也是声调时, 覆盖前面的声调
+                    if context.input:sub(context.caret_pos, context.caret_pos):match('[qwert]') then
+                        context:pop_input(1)
+                        context:push_input(key_repr)
+                        return 1
+                    end
+                    return 2
+                end
+                if key_repr:match('^[asdf]$') then
+                    local start = context:get_selected_candidate().start + 1
+                    local left_input = context.input:sub(1, start - 1)
+                    local right_input = context.input:sub(start, #context.input)
+                    local en_code = right_input:match('%[([a-z]*[1-5]?)%]')
+                    if en_code then
+                        local number_code = env.db:lookup(en_code)
+                        right_input = number_code .. right_input:sub(#en_code + 3, #right_input)
+                    end
+                    local code
+                    if key_repr == 'd' or key_repr == 'f' then
+                        code = lookup_next(env.db, right_input, en_code)
+                    end
+                    if key_repr == 'a' or key_repr == 's' then
+                        code = lookup_back(env.db, right_input, en_code)
+                    end
+                    if code == nil then
+                        context.input = left_input .. right_input
+                    else
+                        context.input = left_input
+                            .. '[' .. code .. ']'
+                            .. right_input:sub(#code + 1, #right_input)
+                        if key_repr == 's' or key_repr == 'd' then
+                            context.caret_pos = start + #code + 1
+                        end
+                    end
+                    return 1
+                end
+                if key_repr:match('^[yuiopghjklzxcvbnm]$')
+                    or key_repr == 'bracketleft'
+                    or key_repr == 'bracketright' then
+                    return 1
+                end
+                return 2
+            else
+                -- 特殊处理 "["
+                if key_repr == 'bracketleft' then
+                    if env.engine.context:get_option('ascii_mode') then
+                        context:push_input('[')
+                    else
+                        context:push_input('【')
+                    end
+                    context:commit()
                     return 1
                 end
             end
-            if key_repr == 'Tab' or key_repr == 'Shift+Tab' then
-                local start = context:get_selected_candidate().start + 1
-                local left_input = context.input:sub(1, start - 1)
-                local right_input = context.input:sub(start, #context.input)
-                local en_code = right_input:match("'([a-z]*[1-5]?)'")
-                if en_code then
-                    local number_code = env.db:lookup(en_code)
-                    right_input = number_code .. right_input:sub(#en_code + 3, #right_input)
-                end
-                local code
-                if key_repr == 'Tab' then
-                    code = lookup_next(env.db, right_input, en_code)
-                else
-                    code = lookup_back(env.db, right_input, en_code)
-                end
-                if code == nil then
-                    context.input = left_input .. right_input
-                else
-                    context.input = left_input
-                        .. "'" .. code .. "'"
-                        .. right_input:sub(#code + 1, #right_input)
-                end
-
-                return 1
-            end
         end
-        return 2
     end,
-}
-return {
-    Processor = Processor,
 }

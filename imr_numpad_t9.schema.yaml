@@ -10,7 +10,7 @@ schema:
 
 engine:
   processors:
-    - lua_processor@*imr.numpad*Processor
+    - lua_processor@*imr.numpad_processor
     - ascii_composer
     - recognizer
     - key_binder
@@ -91,7 +91,7 @@ key_binder:
     - {accept: "Control+Shift+percent", toggle: extended_charset, when: always}
     - {accept: "Control+Shift+4", toggle: zh_simp, when: always}
     - {accept: "Control+Shift+dollar", toggle: zh_simp, when: always}
-    # - {accept: KP_0, send: space, when: has_menu}
+    - {accept: KP_0, send: space, when: has_menu}
     # - {accept: KP_1, send: 1, when: always}
     # - {accept: KP_2, send: 2, when: always}
     # - {accept: KP_3, send: 3, when: always}
@@ -121,8 +121,8 @@ key_binder:
     - {accept: KP_Enter, send: Return, when: has_menu}
   import_preset: default
 speller:
-  alphabet: 1234567890abcdefghijklmnopqrstuvwxyz`'
-  initials: 1234567890'
+  alphabet: 12345689abcdefghijklmnopqrstuvwxyz[]
+  initials: 12345689[
   delimiter: " 7"        # 系统配置，第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
   algebra:
     __include: imr_config:/speller/algebra/imr_numpad_t9
@@ -142,22 +142,14 @@ radical_reverse_lookup:
   # dictionary 为拼音标注来源，目前是显示本方案词库的注音。
   # 可去部件拆字方案下载更全的、带声调的、已编译好的词典： https://github.com/mirtlecn/rime-radical-pinyin#反查带声调注音
   dictionary: wanxiang
-  # comment_format:     # 自定义 comment，例如在左右加上括号
-  #  - xform/^/(/
-  #  - xform/$/)/
+  comment_format:
+    __include: imr_config:/translator/comment_format/万象
 
-# weasel
+## weasel
 # style:
 #   horizontal: false  # 候选项横排：true；false
 menu:
   page_size: 9  # 候选词个数
-imr_numpad_t9:
-  search_format:
-    __include: imr_config:/speller/algebra/声调
-    __append:
-      - xform/<([1-4])>/$1/
-      - xform/<5>/0/
-      - xform/[0-4]//
 
 __patch:
   imr_config:/octagram/wanxiang

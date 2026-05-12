@@ -165,7 +165,7 @@ speller:
         - erase/.*[1-9].*[a-z].*/
         - erase/.*[a-z][^<]*[1-9].*/
         # 英文前后加'
-        - xform/([a-z]+(<[1-5]>)?)/'${1}'/
+        - xform/([a-z]+(<[1-5]>)?)/[${1}]/
 
         - xform/([1-9]+)<1>/${1}q/
         - xform/([1-9]+)<2>/${1}w/
@@ -173,11 +173,7 @@ speller:
         - xform/([1-9]+)<4>/${1}r/
         - xform/([1-9]+)<5>/${1}t/
 
-        - xform/([a-z]+)<1>/${1}1/
-        - xform/([a-z]+)<2>/${1}2/
-        - xform/([a-z]+)<3>/${1}3/
-        - xform/([a-z]+)<4>/${1}4/
-        - xform/([a-z]+)<5>/${1}5/
+        - xform/([a-z]+)<[1-5]>/${1}${2}/
     radical_double:
       __include: speller/algebra/自然码
       __append: # 去掉分隔符
@@ -317,7 +313,7 @@ translator:
         - xform/<92>/d/
         - xform/<93>/a/
       imr_numpad_t9:
-        - xform/([a-z]+)([1-4])/'${1}<${2}>'/
+        - xform/\[([a-z]+)([1-4])\]/[${1}<${2}>]/
     imr_t93:
       __include: translator/preedit_format/初始化/imr_t93
       __append:
@@ -329,8 +325,7 @@ translator:
       __append:
         __include: translator/preedit_format/声调
         __append: 
-          - xform/'(.*)'/【${1}】/
-          - xform/7/'/
+          - xlit/[]7/【】'/
           - xform/([1-9])q/${1}¹/
           - xform/([1-9])w/${1}²/
           - xform/([1-9])e/${1}³/

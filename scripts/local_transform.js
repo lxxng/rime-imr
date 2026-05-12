@@ -173,9 +173,9 @@ function numpad_t9_reverse_transform(source_map) {
                 .replace(/ǹ(.*)$/g, 'n$1/4')
                 .replace(/ḿ(.*)$/g, 'm$1/2')
                 .replace(/m̀(.*)$/g, 'm$1/4')
-                .replace(/^ng$/g, 'eng')
-                .replace(/^n$/g, 'en')
-                .replace(/^m$/g, 'me')
+                .replace(/^ng\//g, 'eng/')
+                .replace(/^n\//g, 'en/')
+                .replace(/^m\//g, 'me/')
                 .replace('/', '')
             return en_tone
         })
