@@ -45,7 +45,7 @@ local function lookup_next(db, right_number, en_code)
         else
             local _, _end = string.find(' ' .. en_codes .. ' ', ' ' .. en_code .. ' ')
             if _end ~= nil then
-                local matched = string.match(' ' .. en_codes, '[a-z]+[0-4]?', _end + 1)
+                local matched = string.match(en_codes, '[a-z]+[0-4]?', _end)
                 if matched ~= nil then
                     return matched
                 end
@@ -57,6 +57,40 @@ local function lookup_next(db, right_number, en_code)
             code_len = code_len - 1
         end
         code_len = code_len - 1
+    end
+    return nil
+end
+
+local function lookup_back(db, right_number, en_code)
+    local code = right_number:match('[12345689]+[qwert]?')
+    local flag = false
+    local code_len_max = #code > 7 and 7 or #code
+    local code_len = 0
+    while code_len <= code_len_max do
+        -- 当前右边的字符是声调, 这个应该跳过
+        if code:sub(code_len + 1, code_len + 1):match('[qwert]') then
+            code_len = code_len + 1
+        end
+        local number_code = code:sub(1, code_len)
+
+        local en_codes = db:lookup(number_code)
+        if en_code == nil or en_code == '' or flag then
+            local first_lookup = en_codes:reverse():match('[0-4]?[a-z]+')
+            if first_lookup ~= nil then
+                return first_lookup:reverse()
+            end
+        else
+            local _start, _ = string.find(' ' .. en_codes .. ' ', ' ' .. en_code .. ' ')
+            if _start ~= nil then
+                local matched = en_codes:reverse():match('[0-4]?[a-z]+', #en_codes - _start + 2)
+                if matched ~= nil then
+                    return matched:reverse()
+                end
+                flag = true
+            end
+        end
+
+        code_len = code_len + 1
     end
     return nil
 end
@@ -80,7 +114,7 @@ local Processor = {
                     return 1
                 end
             end
-            if key_repr == 'Tab' or key_repr == 'Shift+Taab' then
+            if key_repr == 'Tab' or key_repr == 'Shift+Tab' then
                 local start = context:get_selected_candidate().start + 1
                 local left_input = context.input:sub(1, start - 1)
                 local right_input = context.input:sub(start, #context.input)
@@ -89,7 +123,12 @@ local Processor = {
                     local number_code = env.db:lookup(en_code)
                     right_input = number_code .. right_input:sub(#en_code + 3, #right_input)
                 end
-                local code = lookup_next(env.db, right_input, en_code)
+                local code
+                if key_repr == 'Tab' then
+                    code = lookup_next(env.db, right_input, en_code)
+                else
+                    code = lookup_back(env.db, right_input, en_code)
+                end
                 if code == nil then
                     context.input = left_input .. right_input
                 else
