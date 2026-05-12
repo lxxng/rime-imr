@@ -1,5 +1,5 @@
 const path = require('path')
-const PROJECT_ROOT = path.join(__dirname, '..');
+const PROJECT_ROOT = __dirname;
 const updateFiles = require(path.join(PROJECT_ROOT, 'scripts', 'update_files'));
 const transform = require(path.join(PROJECT_ROOT, 'scripts', 'local_transform'));
 
