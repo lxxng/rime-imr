@@ -79,6 +79,7 @@ async function syncViaConditionalRequest(url, localPath) {
     console.log('文件已保存到', localPath);
     saveETag(localPath, newETag);
     console.log(`[更新] 新 ETag: ${newETag}`);
+    console.log('=============================')
     return true;
 }
 

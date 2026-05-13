@@ -32,7 +32,6 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const PROJECT_ROOT = path.join(__dirname, '..');
-console.log(require(path.join(PROJECT_ROOT, 'scripts', 'js-yaml.min')))
 const checkAndUpdateFile = require(path.join(PROJECT_ROOT, 'scripts', '_remote_check'));
 
 
