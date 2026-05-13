@@ -34,7 +34,7 @@ schema:
     - imr_t93_radical_pinyin
     - imr_t93_stroke
     - imr_t93_aux_code
-    - imr_double_pinyin_aux_code
+    - imr_aux_code_comment
 
 engine:
   processors:
@@ -165,7 +165,7 @@ aux:
   length: 3
   comment:
     enable: true
-    db: imr_double_pinyin_aux_code
+    db: imr_aux_code_comment
 
 menu:
   alternative_select_keys: ABCDEFGHIJ

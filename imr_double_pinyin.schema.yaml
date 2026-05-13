@@ -26,6 +26,7 @@ schema:
     - melt_eng        # 英文输入，作为次翻译器挂载到拼音方案
     - imr_double_pinyin_radical_pinyin     # 部件拆字，反查及辅码
     - imr_double_pinyin_aux_code
+    - imr_aux_code_comment
 
 
 # 开关
@@ -311,7 +312,7 @@ aux:
   length: 2
   comment:
     enable: true
-    db: imr_double_pinyin_aux_code
+    db: imr_aux_code_comment
 
 __patch:
   imr_config:/octagram/wanxiang

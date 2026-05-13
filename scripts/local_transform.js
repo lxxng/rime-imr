@@ -81,6 +81,26 @@ function lookup_t93_transform(source_map) {
     }
     return { aux_code: target_lines.join('\n') };
 }
+function chaifen_transform(source_map) {
+    const source_lines = source_map.chaifen.split('\n');
+    let target_lines = [];
+    // 遍历每一行
+    for (let source_line of source_lines) {
+        source_line = source_line.trim();
+        if (source_line) {
+            let parts = source_line.split('\t', 2);
+            if (parts.length == 2) {
+                for (let comment of parts[1].split('｜')) {
+                    if (comment.length != 0) {
+                        target_lines.push(`${parts[0]}\t${comment}`);
+                    }
+                }
+            }
+        }
+    }
+    return { aux_comment: target_lines.join('\n') };
+
+}
 function wanxiang_pro_transform(source_map) {
     const aux_code_lines = source_map.aux_code.split('\n');
     const aux_code_map = {};
@@ -226,6 +246,18 @@ const files = [
             },
         },
         transform: lookup_t93_transform,
+    },
+    {
+        source: {
+            chaifen: 'tmp/wanxiang/zrm_chaifen.txt',
+        },
+        target: {
+            aux_comment: {
+                file: 'dicts/lookup/ZRM-wanxiang_comment.dict.yaml',
+                name: 'ZRM-wanxiang_comment'
+            },
+        },
+        transform: chaifen_transform,
     },
     {
         source: {

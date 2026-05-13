@@ -249,7 +249,7 @@ local function append_comment(cand, auxCodes, char)
     if char ~= '' then
         comment = char .. ':' .. comment
     end
-    comment = '(' .. comment .. ')'
+    -- comment = '(' .. comment .. ')'
     -- 处理 simplifier
     if cand:get_dynamic_type() == 'Shadow' then
         local shandow_cand = cand
