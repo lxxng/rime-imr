@@ -155,8 +155,6 @@ reduce_english_filter:
 
 # Lua 配置: 置顶候选项
 # 注释太长了，请参考 pin_cand_filter.lua 开头的说明书。
-pin_cand_filter:
-  __include: imr_config:/pin_cand_filter/imr_double
 
 
 # 主翻译器，拼音
@@ -315,5 +313,5 @@ aux:
     db: imr_aux_code_comment
 
 __patch:
-  imr_config:/octagram/wanxiang
+  grammar.yaml
 

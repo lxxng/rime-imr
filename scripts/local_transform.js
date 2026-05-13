@@ -1,3 +1,7 @@
+const fs = require('fs');
+const path = require('path');
+const PROJECT_ROOT = path.join(__dirname, '..');
+const js_yaml = require(path.join(PROJECT_ROOT, 'scripts', 'js-yaml.min'))
 const t93_numbers = {
     /**
       # |by*|kvc|qso|
@@ -222,6 +226,17 @@ function numpad_t9_reverse_transform(source_map) {
         }, [])
     return { reverse: target_lines.join('\n') }
 }
+function grammer_transform(source_map) { 
+    const source = source_map.schema
+    const source_json = js_yaml.load(source)
+    const target_json = {}
+    target_json.grammar = source_json.grammar
+    target_json['translator/contextual_suggestions'] = false
+    target_json['translator/max_homophones'] = source_json.translator.max_homophones
+    target_json['translator/max_homographs'] = source_json.translator.max_homographs
+    const target = js_yaml.dump(target_json)
+    return { grammar: target }
+}
 const files = [
     {
         source: {
@@ -292,13 +307,23 @@ const files = [
             },
         },
         transform: numpad_t9_reverse_transform,
+    },
+    {
+        source: {
+            schema: 'tmp/wanxiang/wanxiang.schema.yaml',
+        },
+        target: {
+            grammar: {
+                file: 'grammar.yaml',
+                is_dict: false,
+            },
+        },
+        transform: grammer_transform,
     }
 ]
 
 const { log } = require('console');
 // 读取ZRM_wanxiang.dict.yaml文件并处理
-const fs = require('fs');
-const path = require('path');
 
 function work() {
     files.forEach(file => {
@@ -313,7 +338,7 @@ function work() {
         const target_map = transform(source_map)
         Object.keys(target_map).forEach(target_key => {
             const target_file = path.join(__dirname, '..', target[target_key].file);
-            fs.writeFileSync(target_file, [
+            fs.writeFileSync(target_file, ((target[target_key].is_dict ?? true) ? [
                 `# Rime dictionary`,
                 `# encoding: utf-8`,
                 `#`,
@@ -321,9 +346,8 @@ function work() {
                 `---`,
                 `name: ${target[target_key].name}`,
                 `version: ${target[target_key].version ?? 'zzz'}`,
-                `...`,
-                target_map[target_key]
-            ].join('\n'), 'utf8');
+                `...`
+            ].join('\n') : '') + '\n' + target_map[target_key] , 'utf8');
             console.log('文件已成功写入', target_file)
         })
         //     const source_lineses = source_file.map(file => {

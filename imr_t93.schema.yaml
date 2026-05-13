@@ -153,9 +153,6 @@ reverse_lookup:
   comment_format:
     __include: imr_config:/translator/comment_format/万象
 
-pin_cand_filter:
-  __include: imr_config:/pin_cand_filter/imr_t93
-  
 aux:
   trigger:
     # default: '`'
@@ -171,4 +168,4 @@ menu:
   alternative_select_keys: ABCDEFGHIJ
 
 __patch:
-  imr_config:/octagram/wanxiang
+  grammar.yaml

@@ -15,9 +15,11 @@ const PROJECT_ROOT = path.join(__dirname, '..');
  * @returns {string|null}
  */
 function loadLocalETag(localFile) {
-    const etagFile = path.join(PROJECT_ROOT, 'etags', localFile + '.etag');
-    if (fs.existsSync(etagFile)) {
-        return fs.readFileSync(etagFile, 'utf-8').trim();
+    if (fs.existsSync(localFile)) {
+        const etagFile = path.join(PROJECT_ROOT, 'etags', localFile + '.etag');
+        if (fs.existsSync(etagFile)) {
+            return fs.readFileSync(etagFile, 'utf-8').trim();
+        }
     }
     return null;
 }
@@ -70,13 +72,13 @@ async function syncViaConditionalRequest(url, localPath) {
         console.log('结果：远程文件未变化（ETag 相同），无需下载。');
         return true;
     }
-    saveETag(localPath, newETag);
-    console.log(`[更新] 新 ETag: ${newETag}`);
-
+    console.log('[下载]', localPath)
     // 写入文件
     const buffer = Buffer.from(await response.arrayBuffer());
     fs.writeFileSync(localPath, buffer);
     console.log('文件已保存到', localPath);
+    saveETag(localPath, newETag);
+    console.log(`[更新] 新 ETag: ${newETag}`);
     return true;
 }
 

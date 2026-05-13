@@ -20,7 +20,9 @@ const files = {
     'dicts/wanxiang/diming.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/diming.dict.yaml',
     'tmp/wanxiang/aux_code.txt': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/custom/aux_code.txt',
     'tmp/wanxiang/zrm_chaifen.txt': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/custom/zrm_chaifen.txt',
-    'lua/librime.lua': 'https://raw.githubusercontent.com/hchunhui/librime-lua/master/contrib/librime.lua'
+    'lua/librime.lua': 'https://raw.githubusercontent.com/hchunhui/librime-lua/master/contrib/librime.lua',
+    'wanxiang-lts-zh-hans.gram': 'https://cnb.cool/amzxyz/rime-wanxiang/-/releases/download/model/wanxiang-lts-zh-hans.gram',
+    'tmp/wanxiang/wanxiang.schema.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/wanxiang.schema.yaml',
 };
 
 // 同步远程数据
@@ -30,6 +32,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const PROJECT_ROOT = path.join(__dirname, '..');
+console.log(require(path.join(PROJECT_ROOT, 'scripts', 'js-yaml.min')))
 const checkAndUpdateFile = require(path.join(PROJECT_ROOT, 'scripts', '_remote_check'));
 
 
