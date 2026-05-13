@@ -143,8 +143,8 @@ speller:
     imr_numpad_t9:
       __include: speller/algebra/声调
       __append:
-        - abbrev/^([a-z]).+$/$2/ # 超级简拼
-        - abbrev/^([zcs]h).+$/$1/ # 超级简拼中，zh ch sh 视为整体（ch'sh → 城市），而不是像这样分开（c'h's'h → 吃好睡好）。
+        # - abbrev/^([a-z]).+$/$1/ # 超级简拼
+        # - abbrev/^([zcs]h).+$/$1/ # 超级简拼中，zh ch sh 视为整体（ch'sh → 城市），而不是像这样分开（c'h's'h → 吃好睡好）。
 
         - derive/^([a-z]*)<[1-5]>$/$1/
         # ### 小键盘九宫格映射

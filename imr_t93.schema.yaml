@@ -168,4 +168,4 @@ menu:
   alternative_select_keys: ABCDEFGHIJ
 
 __patch:
-  grammar.yaml
+  grammar.yaml:/

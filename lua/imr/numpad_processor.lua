@@ -125,6 +125,9 @@ return {
                     return 2
                 end
                 if key_repr:match('^[asdf]$') then
+                    if context:get_selected_candidate() == nil then
+                        return 1
+                    end
                     local start = context:get_selected_candidate().start + 1
                     local left_input = context.input:sub(1, start - 1)
                     local right_input = context.input:sub(start, #context.input)

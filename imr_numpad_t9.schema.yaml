@@ -152,4 +152,4 @@ menu:
   page_size: 9  # 候选词个数
 
 __patch:
-  grammar.yaml
+  grammar.yaml:/

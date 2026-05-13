@@ -1,16 +1,20 @@
 const files = {
-    'dicts/ice/8105.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/8105.dict.yaml',
-    'dicts/ice/41448.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/41448.dict.yaml',
-    'dicts/ice/base.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/base.dict.yaml',
-    'dicts/ice/ext.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/ext.dict.yaml',
-    'dicts/ice/others.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/others.dict.yaml',
-    'dicts/ice/tencent.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/tencent.dict.yaml',
-    'dicts/ice/cn_en_double_pinyin.txt': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/cn_en_double_pinyin.txt',
-    'dicts/ice/cn_en.txt': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/cn_en.txt',
-    'dicts/ice/en_ext.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/en_ext.dict.yaml',
-    'dicts/ice/en.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/en.dict.yaml',
+    //// 雾凇
+    // 'dicts/ice/8105.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/8105.dict.yaml',
+    // 'dicts/ice/41448.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/41448.dict.yaml',
+    // 'dicts/ice/base.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/base.dict.yaml',
+    // 'dicts/ice/ext.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/ext.dict.yaml',
+    // 'dicts/ice/others.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/others.dict.yaml',
+    // 'dicts/ice/tencent.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/cn_dicts/tencent.dict.yaml',
+    // 'dicts/ice/cn_en_double_pinyin.txt': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/cn_en_double_pinyin.txt',
+    // 'dicts/ice/cn_en.txt': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/cn_en.txt',
+    // 'dicts/ice/en_ext.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/en_ext.dict.yaml',
+    // 'dicts/ice/en.dict.yaml': 'https://raw.githubusercontent.com/iDvel/rime-ice/main/en_dicts/en.dict.yaml',
+    //// 拼音拆字
     'dicts/lookup/radical_pinyin.dict.yaml': 'https://raw.githubusercontent.com/mirtlecn/rime-radical-pinyin/master/radical_pinyin.dict.yaml',
+    //// 笔画
     'dicts/lookup/stroke.dict.yaml': 'https://raw.githubusercontent.com/rime/rime-stroke/master/stroke.dict.yaml',
+    //// 万象
     'dicts/wanxiang/zi.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/zi.dict.yaml',
     'dicts/wanxiang/jichu.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/jichu.dict.yaml',
     'dicts/wanxiang/lianxiang.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/lianxiang.dict.yaml',
@@ -18,11 +22,16 @@ const files = {
     'dicts/wanxiang/duoyin.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/duoyin.dict.yaml',
     'dicts/wanxiang/shici.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/shici.dict.yaml',
     'dicts/wanxiang/diming.dict.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/dicts/diming.dict.yaml',
+    //// 万象辅助码
     'tmp/wanxiang/aux_code.txt': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/custom/aux_code.txt',
+    //// 万象自然码辅助码注释
     'tmp/wanxiang/zrm_chaifen.txt': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/custom/zrm_chaifen.txt',
-    'lua/librime.lua': 'https://raw.githubusercontent.com/hchunhui/librime-lua/master/contrib/librime.lua',
+    //// 万象模型
     'wanxiang-lts-zh-hans.gram': 'https://cnb.cool/amzxyz/rime-wanxiang/-/releases/download/model/wanxiang-lts-zh-hans.gram',
+    //// 万象方案(同步模型参数用)
     'tmp/wanxiang/wanxiang.schema.yaml': 'https://cnb.cool/amzxyz/rime-wanxiang/-/git/raw/wanxiang/wanxiang.schema.yaml',
+    // rime-lua类型声明
+    'lua/librime.lua': 'https://raw.githubusercontent.com/hchunhui/librime-lua/master/contrib/librime.lua',
 };
 
 // 同步远程数据

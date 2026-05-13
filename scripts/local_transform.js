@@ -206,7 +206,7 @@ function numpad_t9_reverse_transform(source_map) {
         .map(en_tone => {
             let en = en_tone.slice(0, -1)
             let tone = Number(en_tone.slice(-1))
-            if(Number.isNaN(tone)) {
+            if (Number.isNaN(tone)) {
                 console.log(en_tone)
             }
             let numbers = [...en].map(en_char => numpad_t9_numbers[en_char]).join('')
@@ -226,7 +226,7 @@ function numpad_t9_reverse_transform(source_map) {
         }, [])
     return { reverse: target_lines.join('\n') }
 }
-function grammer_transform(source_map) { 
+function grammer_transform(source_map) {
     const source = source_map.schema
     const source_json = js_yaml.load(source)
     const target_json = {}
@@ -239,6 +239,7 @@ function grammer_transform(source_map) {
 }
 const files = [
     {
+        // 万象辅助码 => 反查字典
         source: {
             aux_code: 'tmp/wanxiang/aux_code.txt',
         },
@@ -251,6 +252,7 @@ const files = [
         transform: lookup_transform,
     },
     {
+        // 万象辅助码字典 => t93形式的辅助码字典
         source: {
             aux_code: 'dicts/lookup/ZRM-wanxiang.dict.yaml',
         },
@@ -263,6 +265,7 @@ const files = [
         transform: lookup_t93_transform,
     },
     {
+        // 万象辅助码注释 => 字典
         source: {
             chaifen: 'tmp/wanxiang/zrm_chaifen.txt',
         },
@@ -274,29 +277,31 @@ const files = [
         },
         transform: chaifen_transform,
     },
+    // {
+    //     // 万象pro
+    //     source: {
+    //         aux_code: 'tmp/wanxiang/aux_code.txt',
+    //         zi: 'dicts/wanxiang/zi.dict.yaml',
+    //         jichu: 'dicts/wanxiang/jichu.dict.yaml',
+    //         lianxiang: 'dicts/wanxiang/lianxiang.dict.yaml',
+    //         cuoyin: 'dicts/wanxiang/cuoyin.dict.yaml',
+    //         duoyin: 'dicts/wanxiang/duoyin.dict.yaml',
+    //         shici: 'dicts/wanxiang/shici.dict.yaml',
+    //         diming: 'dicts/wanxiang/diming.dict.yaml',
+    //     },
+    //     target: {
+    //         zi: { file: 'dicts/wanxiang/zi.pro.dict.yaml', name: 'zi' },
+    //         jichu: { file: 'dicts/wanxiang/jichu.pro.dict.yaml', name: 'jichu' },
+    //         lianxiang: { file: 'dicts/wanxiang/lianxiang.pro.dict.yaml', name: 'lianxiang' },
+    //         cuoyin: { file: 'dicts/wanxiang/cuoyin.pro.dict.yaml', name: 'cuoyin' },
+    //         duoyin: { file: 'dicts/wanxiang/duoyin.pro.dict.yaml', name: 'duoyin' },
+    //         shici: { file: 'dicts/wanxiang/shici.pro.dict.yaml', name: 'shici' },
+    //         diming: { file: 'dicts/wanxiang/diming.pro.dict.yaml', name: 'diming' },
+    //     },
+    //     transform: wanxiang_pro_transform,
+    // },
     {
-        source: {
-            aux_code: 'tmp/wanxiang/aux_code.txt',
-            zi: 'dicts/wanxiang/zi.dict.yaml',
-            jichu: 'dicts/wanxiang/jichu.dict.yaml',
-            lianxiang: 'dicts/wanxiang/lianxiang.dict.yaml',
-            cuoyin: 'dicts/wanxiang/cuoyin.dict.yaml',
-            duoyin: 'dicts/wanxiang/duoyin.dict.yaml',
-            shici: 'dicts/wanxiang/shici.dict.yaml',
-            diming: 'dicts/wanxiang/diming.dict.yaml',
-        },
-        target: {
-            zi: { file: 'dicts/wanxiang/zi.pro.dict.yaml', name: 'zi' },
-            jichu: { file: 'dicts/wanxiang/jichu.pro.dict.yaml', name: 'jichu' },
-            lianxiang: { file: 'dicts/wanxiang/lianxiang.pro.dict.yaml', name: 'lianxiang' },
-            cuoyin: { file: 'dicts/wanxiang/cuoyin.pro.dict.yaml', name: 'cuoyin' },
-            duoyin: { file: 'dicts/wanxiang/duoyin.pro.dict.yaml', name: 'duoyin' },
-            shici: { file: 'dicts/wanxiang/shici.pro.dict.yaml', name: 'shici' },
-            diming: { file: 'dicts/wanxiang/diming.pro.dict.yaml', name: 'diming' },
-        },
-        transform: wanxiang_pro_transform,
-    },
-    {
+        // 万象 => 小键盘t9反查字典(数字查拼音 拼音查数字)
         source: {
             zi: 'dicts/wanxiang/zi.dict.yaml',
         },
@@ -309,6 +314,7 @@ const files = [
         transform: numpad_t9_reverse_transform,
     },
     {
+        // 万象方案 => 万象模型参数
         source: {
             schema: 'tmp/wanxiang/wanxiang.schema.yaml',
         },
@@ -347,7 +353,7 @@ function work() {
                 `name: ${target[target_key].name}`,
                 `version: ${target[target_key].version ?? 'zzz'}`,
                 `...`
-            ].join('\n') : '') + '\n' + target_map[target_key] , 'utf8');
+            ].join('\n') : '') + '\n' + target_map[target_key], 'utf8');
             console.log('文件已成功写入', target_file)
         })
         //     const source_lineses = source_file.map(file => {
