@@ -74,6 +74,7 @@ engine:
     - simplifier@traditionalize # 简繁切换
     - lua_filter@*imr.aux_code
     - lua_filter@*imr.select_char*Filter
+    - lua_filter@*imr.t93_filter
     - uniquifier # 去重
 
 calculator:
