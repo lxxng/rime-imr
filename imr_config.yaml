@@ -345,6 +345,8 @@ translator:
         __include: translator/preedit_format/imr_t93
     imr_t93_stroke_lookup:
       - xlit/12345/⼀⼁⼃⼂⼄/
+    imr_numpad_t9_stroke:
+      - xlit/62135/⼀⼁⼃⼂⼄/
 
   comment_format:
     万象:

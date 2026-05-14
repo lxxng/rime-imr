@@ -1,0 +1,12 @@
+# Rime schema settings
+# encoding: utf-8
+
+schema:
+  schema_id: imr_numpad_t9_stroke
+  name: imr-numpad-t9-五笔画
+  version: zzz
+speller:
+  algebra:
+    - xlit/hspnz/62135/
+translator:
+  dictionary: imr_numpad_t9_stroke

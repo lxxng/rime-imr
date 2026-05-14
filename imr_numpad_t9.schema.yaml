@@ -5,8 +5,9 @@ schema:
   description: |
     PC小键盘九键输入方案
   dependencies:
-    - imr_numpad_t9_radical_pinyin
     - imr_numpad_t9_reverse_pinyin
+    - imr_numpad_t9_radical_pinyin
+    - imr_numpad_t9_stroke
 
 engine:
   processors:
@@ -24,15 +25,17 @@ engine:
     - matcher
     - abc_segmentor
     - affix_segmentor@radical_lookup  # 部件拆字自定义 tag
+    - affix_segmentor@stroke_lookup   # 笔画拆字自定义 tag
     - punct_segmentor
     - fallback_segmentor
   translators:
     - punct_translator
     - script_translator
     - table_translator@radical_lookup    # 部件拆字反查
+    - table_translator@stroke_lookup     # 笔画拆字反查
     - lua_translator@*force_gc           # 暴力 GC
   filters:
-    - reverse_lookup_filter@radical_reverse_lookup  # 部件拆字滤镜
+    - reverse_lookup_filter@reverse_lookup  # 部件拆字滤镜
     - uniquifier # 去重
 
 
@@ -40,7 +43,8 @@ engine:
 recognizer:
   import_preset: default                # 从 default.yaml 继承通用的
   patterns:                             # 再增加方案专有的：
-    radical_lookup: "^77[1-9]+$"        # 响应部件拆字的反查，触发前缀与 radical_lookup/prefix 匹配
+    radical_lookup: "^77[12345689]+$"        # 响应部件拆字的反查，触发前缀与 radical_lookup/prefix 匹配
+    stroke_lookup: "^75[56123]+$"
 
 translator:
   prism: imr_numpad_t9
@@ -135,10 +139,21 @@ radical_lookup:
   prefix: "77"  # 反查前缀（反查时前缀会消失影响打英文所以设定为两个字母，或可改成一个非字母符号），与 recognizer/patterns/radical_lookup 匹配
   comment_format:
     - erase/^.*$//
+# 笔画拆字反查
+stroke_lookup:
+  tag: stroke_lookup
+  dictionary: imr_numpad_t9_stroke
+  enable_sentence: false
+  enable_user_dict: false
+  prefix: "75"  # 反查前缀（反查时前缀会消失影响打英文所以设定为两个字母，或可改成一个非字母符号），与 recognizer/patterns/radical_lookup 匹配
+  comment_format:
+    - erase/^.*$//
+  preedit_format:
+    - imr_config:/translator/preedit_format/imr_numpad_t9_stroke
 
 # 部件拆字滤镜
-radical_reverse_lookup:
-  tags: [ radical_lookup ]
+reverse_lookup:
+  tags: [ radical_lookup, stroke_lookup ]
   # dictionary 为拼音标注来源，目前是显示本方案词库的注音。
   # 可去部件拆字方案下载更全的、带声调的、已编译好的词典： https://github.com/mirtlecn/rime-radical-pinyin#反查带声调注音
   dictionary: wanxiang
