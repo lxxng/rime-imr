@@ -247,6 +247,8 @@ radical_lookup:
   tips: "  〔拆字〕"
   comment_format:
     - erase/^.*$//
+  preedit_format:
+    __include: imr_config:/translator/preedit_format/imr_double_pinyin_radical_lookup
 # 部件拆字滤镜
 radical_reverse_lookup:
   tags: [ radical_lookup ]

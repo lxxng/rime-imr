@@ -238,7 +238,7 @@ translator:
       - xform/o([a-z]*)<1>/ō${1}/
       - xform/o([a-z]*)<2>/ó${1}/
       - xform/o([a-z]*)<3>/ǒ${1}/
-      - xform/o([a-z]*)<4>/ò${1}/      
+      - xform/o([a-z]*)<4>/ò${1}/
 
       - xform/iu<1>/iū/
       - xform/iu<2>/iú/
@@ -314,6 +314,10 @@ translator:
         - xform/<93>/a/
       imr_numpad_t9:
         - xform/\[([a-z]+)([1-4])\]/[${1}<${2}>]/
+      imr_double_pinyin_radical_lookup:
+        - xform/([a-z]{2})(?=[^'])/${1}'/
+      imr_t93_radical_lookup:
+        - xform/([1-9]{3})(?=[^'])/${1}'/
     imr_t93:
       __include: translator/preedit_format/初始化/imr_t93
       __append:
@@ -324,13 +328,24 @@ translator:
       __include: translator/preedit_format/初始化/imr_numpad_t9
       __append:
         __include: translator/preedit_format/声调
-        __append: 
+        __append:
           - xlit/[]7/【】'/
           - xform/([1-9])q/${1}¹/
           - xform/([1-9])w/${1}²/
           - xform/([1-9])e/${1}³/
           - xform/([1-9])r/${1}⁴/
           - xform/([1-9])t/${1}⁰/
+    imr_double_pinyin_radical_lookup:
+      __include: translator/preedit_format/初始化/imr_double_pinyin_radical_lookup
+      __append:
+        __include: translator/preedit_format/自然码
+    imr_t93_radical_lookup:
+      __include: translator/preedit_format/初始化/imr_t93_radical_lookup
+      __append:
+        __include: translator/preedit_format/imr_t93
+    imr_t93_stroke_lookup:
+      - xlit/12345/⼀⼁⼃⼂⼄/
+
   comment_format:
     万象:
       - xform/^ng(?= |$)/eng/

@@ -30,7 +30,7 @@ schema:
     九键双拼输入方案
     通过第三键实现字母定位
   dependencies:
-    - melt_eng # 英文输入，作为次翻译器挂载到拼音方案
+    # - melt_eng # 英文输入，作为次翻译器挂载到拼音方案
     - imr_t93_radical_pinyin
     - imr_t93_stroke
     - imr_t93_aux_code
@@ -138,6 +138,8 @@ radical_lookup:
   tips: "  〔拆字〕"
   comment_format:
     - erase/^.*$//
+  preedit_format:
+    __include: imr_config:/translator/preedit_format/imr_t93_radical_lookup
 stroke_lookup:
   tag: stroke_lookup
   dictionary: imr_t93_stroke
@@ -146,6 +148,8 @@ stroke_lookup:
   tips: "  〔笔画〕"
   comment_format:
     - erase/^.*$//
+  preedit_format:
+    __include: imr_config:/translator/preedit_format/imr_t93_stroke_lookup
 
 # 拆字滤镜
 reverse_lookup:
