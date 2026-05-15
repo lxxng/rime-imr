@@ -46,7 +46,7 @@ const checkAndUpdateFile = require(path.join(PROJECT_ROOT, 'scripts', '_remote_c
 
 
 // 主函数
-async function updateFiles() {
+async function updateFiles(type = 'All') {
     console.log('开始检查并同步文件...');
     console.log(`共配置了 ${Object.keys(files).length} 个文件\n`);
 
@@ -54,10 +54,14 @@ async function updateFiles() {
     let totalCount = 0;
 
     // 遍历所有配置的文件
-    for (const [projectRelativePath, remoteUrl] of Object.entries(files)) {
-        totalCount++;
-        const success = await checkAndUpdateFile(remoteUrl, projectRelativePath);
-        if (success) successCount++;
+    for (const [filePath, remoteUrl] of Object.entries(files)) {
+        if (type === 'All' || remoteUrl.startsWith('https://cnb.cool')) {
+            totalCount++;
+            const success = await checkAndUpdateFile(remoteUrl, filePath);
+            if (success) {
+                successCount++;
+            }
+        }
     }
 
     console.log(`\n====================`);

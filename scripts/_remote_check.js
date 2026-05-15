@@ -58,7 +58,7 @@ async function syncViaConditionalRequest(url, localPath) {
 
     // 304 → 文件未变化
     if (response.status === 304) {
-        console.log('结果：远程文件未变化（304），无需下载。');
+        console.log('结果：远程文件未变化（304），无需下载。', localPath);
         return true;
     }
 
@@ -69,7 +69,7 @@ async function syncViaConditionalRequest(url, localPath) {
     // 200 → 文件更新或首次下载
     const newETag = response.headers.get('etag');
     if (newETag == cachedETag) {
-        console.log('结果：远程文件未变化（ETag 相同），无需下载。');
+        console.log('结果：远程文件未变化（ETag 相同），无需下载。', localPath);
         return true;
     }
     console.log('[下载]', localPath)
