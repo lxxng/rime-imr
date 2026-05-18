@@ -31,9 +31,12 @@ local Processor = {
             local key_repr = key:repr()
             -- 前面是完整拼音，后面输入的第一个0视为`
             if key_repr == '0' then
-                local text = ignore_word(context.input)
+                local text = ignore_word(context.input:sub(1, context.caret_pos))
                 if text == '' or text == '`' then
-                    context:push_input('`')
+                    -- 在最后加`
+                    local caret_pos = context.caret_pos
+                    context.input = context.input .. '`'
+                    context.caret_pos = caret_pos
                     return 1
                 end
             end
