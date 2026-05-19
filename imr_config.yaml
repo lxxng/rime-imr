@@ -313,7 +313,7 @@ translator:
         - xform/<92>/d/
         - xform/<93>/a/
       imr_PC9:
-        - xform/\[([a-z]+)([1-4])\]/[${1}<${2}>]/
+        - xform/\[([a-z]+)([1-5])\]/[${1}<${2}>]/
       imr_double_pinyin_radical_lookup:
         - xform/([a-z]{2})(?=[^'])/${1}'/
       imr_T93_radical_lookup:
