@@ -102,7 +102,7 @@ local function lookup_back(db, right_number, en_code)
 end
 return {
     init = function(env)
-        env.db = ReverseLookup('imr_numpad_t9_reverse_pinyin')
+        env.db = ReverseLookup('imr_PC9_REVERSE')
     end,
     func = function(key, env)
         local engine = env.engine

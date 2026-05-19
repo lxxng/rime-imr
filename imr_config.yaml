@@ -121,7 +121,7 @@ speller:
           - xform/<3>/9/
           - xform/<4>/0/
           - xform/<5>/00/
-    imr_t93:
+    imr_T93:
       __include: speller/algebra/声调
       __append:
         __include: speller/algebra/自然码
@@ -140,7 +140,7 @@ speller:
             - xform/<3>/c/
             - xform/<4>/d/
             - xform/<5>/e/
-    imr_numpad_t9:
+    imr_PC9:
       __include: speller/algebra/声调
       __append:
         # - abbrev/^([a-z]).+$/$1/ # 超级简拼
@@ -174,11 +174,11 @@ speller:
         - xform/([1-9]+)<5>/${1}t/
 
         - xform/([a-z]+)<([1-5])>/${1}${2}/
-    radical_double:
+    imr_double_pinyin_radical_pinyin:
       __include: speller/algebra/自然码
       __append: # 去掉分隔符
         - xform/'//
-    radical_t93:
+    imr_T93_radical_pinyin:
       __include: speller/algebra/自然码
       __append:
         __include: speller/algebra/九宫格
@@ -266,7 +266,7 @@ translator:
       - xform/<4>/⁴/
       - xform/<5>/⁰/
     初始化:
-      imr_t93:
+      imr_T93:
         - xform/a/<1>/
         - xform/b/<2>/
         - xform/c/<3>/
@@ -312,20 +312,20 @@ translator:
         - xform/<91>/h/
         - xform/<92>/d/
         - xform/<93>/a/
-      imr_numpad_t9:
+      imr_PC9:
         - xform/\[([a-z]+)([1-4])\]/[${1}<${2}>]/
       imr_double_pinyin_radical_lookup:
         - xform/([a-z]{2})(?=[^'])/${1}'/
-      imr_t93_radical_lookup:
+      imr_T93_radical_lookup:
         - xform/([1-9]{3})(?=[^'])/${1}'/
-    imr_t93:
-      __include: translator/preedit_format/初始化/imr_t93
+    imr_T93:
+      __include: translator/preedit_format/初始化/imr_T93
       __append:
         __include: translator/preedit_format/自然码
         __append:
           __include: translator/preedit_format/声调
-    imr_numpad_t9:
-      __include: translator/preedit_format/初始化/imr_numpad_t9
+    imr_PC9:
+      __include: translator/preedit_format/初始化/imr_PC9
       __append:
         __include: translator/preedit_format/声调
         __append:
@@ -339,13 +339,13 @@ translator:
       __include: translator/preedit_format/初始化/imr_double_pinyin_radical_lookup
       __append:
         __include: translator/preedit_format/自然码
-    imr_t93_radical_lookup:
-      __include: translator/preedit_format/初始化/imr_t93_radical_lookup
+    imr_T93_radical_lookup:
+      __include: translator/preedit_format/初始化/imr_T93_radical_lookup
       __append:
-        __include: translator/preedit_format/imr_t93
-    imr_t93_stroke_lookup:
+        __include: translator/preedit_format/imr_T93
+    imr_T93_stroke_lookup:
       - xlit/12345/⼀⼁⼃⼂⼄/
-    imr_numpad_t9_stroke:
+    imr_PC9_stroke:
       - xlit/62135/⼀⼁⼃⼂⼄/
 
   comment_format:

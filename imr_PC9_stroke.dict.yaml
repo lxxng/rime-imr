@@ -1,11 +1,11 @@
 # Rime dictionary
 # encoding: utf-8
 #
-# numpad_t9的五笔画反查
+# PC9的五笔画反查
 #
 
 ---
-name: imr_numpad_t9_stroke
+name: imr_PC9_stroke
 version: zzz
 import_tables:
   - dicts/lookup/stroke

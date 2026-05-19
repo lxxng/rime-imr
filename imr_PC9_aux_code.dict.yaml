@@ -5,8 +5,8 @@
 #
 
 ---
-name: imr_numpad_t9_aux_code
+name: imr_PC9_aux_code
 version: zzz
 import_tables:
-  - dicts/lookup/ZRM-pc9
+  - dicts/lookup/AUX-radical_pinyin_PC9
 ...

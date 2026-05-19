@@ -7,6 +7,6 @@ schema:
   version: zzz
 speller:
   algebra:
-    __include: imr_config.yaml:/speller/algebra/radical_double
+    __include: imr_config.yaml:/speller/algebra/imr_double_pinyin_radical_pinyin
 translator:
   dictionary: imr_double_pinyin_radical_pinyin

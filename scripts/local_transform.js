@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const PROJECT_ROOT = path.join(__dirname, '..');
-const js_yaml = require(path.join(PROJECT_ROOT, 'scripts', 'js-yaml.min'))
-const t93_numbers = {
+const YAML = require(path.join(PROJECT_ROOT, 'scripts', 'js-yaml.min'))
+const T93_EN_NUM = {
     /**
       # |by*|kvc|qso|
       # |fnz|pix|gte|
@@ -18,7 +18,7 @@ const t93_numbers = {
     'r': [8, 1], 'u': [8, 2], 'w': [8, 3],
     'h': [9, 1], 'd': [9, 2], 'a': [9, 3],
 }
-const numpad_t9_numbers = {
+const PC9_EN_NUM = {
     // ### 小键盘九宫格映射
     // ***  abc def
     // ghi  jkl mno
@@ -32,327 +32,290 @@ const numpad_t9_numbers = {
     't': 2, 'u': 2, 'v': 2,
     'w': 3, 'x': 3, 'y': 3, 'z': 3,
 }
-function lookup_transform(source_map) {
-    const source_lines = source_map.aux_code.split('\n');
-    let target_lines = [];
-    // 遍历每一行
-    for (let source_line of source_lines) {
-        source_line = source_line.trim();
-        if (source_line) {
-            let parts = source_line.split('\t', 2);
-            if (parts.length == 2) {
-                let aux_codes = parts[1].split(';')
-                if (
-                    aux_codes.length >= 5
-                    && aux_codes[4].length != 0
-                ) {
-                    for (let aux_code of aux_codes[4].split(',')) {
-                        if (aux_code.length != 0) {
-                            target_lines.push(`${parts[0]}\t${aux_code}`);
-                        }
-                    }
+const TRANSFORMER = {
+    wanxiang_aux_code({ txt: source_context }) {
+        return source_context.split('\n')
+            .map(line => line.trim())
+            .filter(line => line)
+            .filter(line => line.charAt(0) != '#')
+            .map(line => line.split('\t', 2))
+            .filter(arr => arr.length === 2)
+            .map(([cn, code_str]) => [cn, code_str.split(';')])
+            .filter(([cn, code_arr]) => code_arr.length >= 5)
+            // [4] 是自然码
+            .map(([cn, code_arr]) => [cn, code_arr[4]])
+            // code包含','
+            .filter(([cn, code]) => code)
+            .flatMap(([cn, code]) => code.split(',').map(code => [cn, code]))
+            .filter(([cn, code]) => code)
+            .map(([cn, code]) => {
+                if (code.length >= 2) {
+                    const en1 = code.charAt(0);
+                    const en2 = code.charAt(1);
+                    const number1 = T93_EN_NUM[en1][0];
+                    const number2 = T93_EN_NUM[en2][0];
+                    const number3 = (T93_EN_NUM[en1][1] - 1) * 3 + (T93_EN_NUM[en2][1]);
+                    return [cn, code, [`${number1}${number2}${number3}`, `${number1}${number2}0`]]
                 }
-                // ['', [1], [2], [3], zrm, ... ]
-            }
-        }
-    }
-    return { aux_code: target_lines.join('\n') };
-}
-function lookup_t93_transform(source_map) {
-    const source_lines = source_map.aux_code.split('\n');
-    let target_lines = [];
-    // 遍历每一行
-    for (let source_line of source_lines) {
-        source_line = source_line.trim();
-        if (source_line) {
-            let parts = source_line.split('\t');
-            let cn = parts[0];
-            let en = parts[1];
-            if (en && en.length == 1) {
-                target_lines.push(`${cn}\t${t93_numbers[en.charAt(0)][0]}`);
-            }
-            if (en && en.length >= 2) {
-                let en1 = en.charAt(0);
-                let en2 = en.charAt(1);
-                let number1 = t93_numbers[en1][0];
-                let number2 = t93_numbers[en2][0];
-                let number3 = (t93_numbers[en1][1] - 1) * 3
-                    + (t93_numbers[en2][1]);
-                target_lines.push(`${cn}\t${number1}${number2}${number3}`);
-                target_lines.push(`${cn}\t${number1}${number2}0`);
-            }
-        }
-    }
-    return { aux_code: target_lines.join('\n') };
-}
-function chaifen_transform(source_map) {
-    const source_lines = source_map.chaifen.split('\n');
-    let target_lines = [];
-    // 遍历每一行
-    for (let source_line of source_lines) {
-        source_line = source_line.trim();
-        if (source_line) {
-            let parts = source_line.split('\t', 2);
-            if (parts.length == 2) {
-                for (let comment of parts[1].split('｜')) {
-                    if (comment.length != 0) {
-                        target_lines.push(`${parts[0]}\t${comment}`);
-                    }
+                return [cn, code, undefined]
+            })
+            .reduce((result, [cn, double_pinyin, T93]) => {
+                result.double_pinyin += `${cn}\t${double_pinyin}\n`;
+                if (T93) {
+                    result.T93 += `${cn}\t${T93[0]}\n${cn}\t${T93[1]}\n`;
                 }
-            }
-        }
-    }
-    return { aux_comment: target_lines.join('\n') };
-
-}
-function wanxiang_pro_transform(source_map) {
-    const aux_code_lines = source_map.aux_code.split('\n');
-    const aux_code_map = {};
-    for (let source_line of aux_code_lines) {
-        source_line = source_line.trim();
-        if (source_line) {
-            let parts = source_line.split('\t', 2);
-            if (parts.length == 2) {
-                let aux_codes = parts[1].split(';')
-                if (
-                    aux_codes.length >= 5
-                    && aux_codes[4].length != 0
-                ) {
-                    aux_code_map[parts[0]] = aux_codes[4];
+                return result;
+            }, { double_pinyin: '', T93: '' })
+    },
+    wanxiang_aux_code_comment({ txt: source_context }) {
+        return source_context.split('\n')
+            .map(line => line.trim())
+            .filter(line => line)
+            .filter(line => line.charAt(0) != '#')
+            .map(line => line.split('\t', 2))
+            .filter(arr => arr.length === 2)
+            .flatMap(([cn, comments]) => comments.split('｜').map(comment => [cn, comment]))
+            .filter(([cn, comment]) => comment)
+            .reduce((result, [cn, comment]) => {
+                result.comment += `${cn}\t${comment}\n`
+                return result
+            }, { comment: '' })
+    },
+    PC9_aux_code({ radical: source_context }) {
+        let source_lines = source_context.split('\n')
+        let shift = undefined;
+        while ((shift = source_lines.shift()) != '...' && shift != undefined);
+        return source_lines
+            .map(line => line.trim())
+            .filter(line => line)
+            .filter(line => line.charAt(0) != '#')
+            .map(line => line.split('\t'))
+            .map(([cn, en]) => [cn, en.split('').map(en_char => PC9_EN_NUM[en_char]).join('')])
+            .reduce((result, [cn, numbers]) => {
+                result.PC9 += `${cn}\t${numbers}\n`
+                return result;
+            }, { PC9: '' })
+        return { PC9: target_lines.join('\n') }
+    },
+    wanxiang_pro(source_map) {
+        const aux_map = source_map.aux_txt.split('\n')
+            .map(line => line.trim())
+            .filter(line => line)
+            .filter(line => line.charAt(0) != '#')
+            .map(line => line.split('\t', 2))
+            .filter(arr => arr.length === 2)
+            .map(([cn, en_str]) => [cn, en_str.split(';')])
+            .filter(([_, en_arr]) => en_arr.length >= 5)
+            .map(([cn, en_arr]) => [cn, en_arr[4]])
+            .filter(([cn, code]) => code)
+            .reduce((aux_map, [cn, code]) => {
+                aux_map[cn] = code;
+                return aux_map;
+            }, {})
+        return Object.keys(source_map).filter(key => key != 'aux_txt')
+            .map(key => ({ key, context: source_map[key] }))
+            .map(({ key, context }) => {
+                let source_lines = context.split('\n');
+                let shift = undefined;
+                while ((shift = source_lines.shift()) != '...' && shift != undefined);
+                return {
+                    key, context: source_lines
+                        .map(line => line.trim())
+                        .filter(line => line)
+                        .filter(line => line.charAt(0) != '#')
+                        .map(line => line.split('\t', 3))
+                        .map(([cn, en, other]) => [cn.split(''), en.split(' '), other])
+                        .map(([cn_arr, en_arr, other]) => [cn_arr.join(''), en_arr.map((en, index) => en_arr[index] + ';' + aux_map[cn_arr[index]]), other])
+                        .reduce((context, [cn, en, other]) => {
+                            context += `${cn}\t${en}`;
+                            context += other ? `\t${other}` : '';
+                            context += '\n';
+                            return context
+                        }, '')
                 }
-            }
-        }
+            })
+            .reduce((result, { key, context }) => {
+                result[key] = context;
+                return result;
+            }, {})
+    },
+    PC9_reverse({ zi }) {
+        const source_lines = zi.split('\n');
+        let shift = undefined;
+        while ((shift = source_lines.shift()) != '...' && shift != undefined);
+        const tones = [, 'q', 'w', 'e', 'r', 't']
+        return source_lines
+            .map(line => line.trim())
+            .filter(line => line)
+            .filter(line => line.charAt(0) != '#')
+            .map(line => line.split('\t'))
+            .map(([cn, en,]) => {
+                let en_tone = en
+                    .replace('ü', 'v')
+                    .replace(/^([a-z]*)$/g, '$1/5')
+                    .replace(/ā(.*)$/g, 'a$1/1')
+                    .replace(/á(.*)$/g, 'a$1/2')
+                    .replace(/ǎ(.*)$/g, 'a$1/3')
+                    .replace(/à(.*)$/g, 'a$1/4')
+                    .replace(/ē(.*)$/g, 'e$1/1')
+                    .replace(/é(.*)$/g, 'e$1/2')
+                    .replace(/ě(.*)$/g, 'e$1/3')
+                    .replace(/è(.*)$/g, 'e$1/4')
+                    .replace(/ī(.*)$/g, 'i$1/1')
+                    .replace(/í(.*)$/g, 'i$1/2')
+                    .replace(/ǐ(.*)$/g, 'i$1/3')
+                    .replace(/ì(.*)$/g, 'i$1/4')
+                    .replace(/ō(.*)$/g, 'o$1/1')
+                    .replace(/ó(.*)$/g, 'o$1/2')
+                    .replace(/ǒ(.*)$/g, 'o$1/3')
+                    .replace(/ò(.*)$/g, 'o$1/4')
+                    .replace(/ū(.*)$/g, 'u$1/1')
+                    .replace(/ú(.*)$/g, 'u$1/2')
+                    .replace(/ǔ(.*)$/g, 'u$1/3')
+                    .replace(/ù(.*)$/g, 'u$1/4')
+                    .replace(/ǖ(.*)$/g, 'v$1/1')
+                    .replace(/ǘ(.*)$/g, 'v$1/2')
+                    .replace(/ǚ(.*)$/g, 'v$1/3')
+                    .replace(/ǜ(.*)$/g, 'v$1/4')
+                    .replace(/ń(.*)$/g, 'n$1/2')
+                    .replace(/ň(.*)$/g, 'n$1/3')
+                    .replace(/ǹ(.*)$/g, 'n$1/4')
+                    .replace(/ḿ(.*)$/g, 'm$1/2')
+                    .replace(/m̀(.*)$/g, 'm$1/4')
+                    .replace(/^ng\//g, 'eng/')
+                    .replace(/^n\//g, 'en/')
+                    .replace(/^m\//g, 'me/')
+                    .replace('/', '')
+                return en_tone
+            })
+            .flatMap(en_tone => {
+                let en = en_tone.slice(0, -1)
+                let tone = Number(en_tone.slice(-1))
+                if (Number.isNaN(tone)) {
+                    console.error(en_tone)
+                }
+                let numbers = [...en].map(en_char => PC9_EN_NUM[en_char]).join('')
+                return [
+                    [numbers + tones[tone], en + tone].join('\t'),
+                    [numbers, en].join('\t'),
+                    [en + tone, numbers + tones[tone]].join('\t'),
+                    [en, numbers].join('\t'),
+                ]
+            })
+            .reduce((lines, current) => {
+                if (lines.indexOf(current) === -1) {
+                    lines.push(current);
+                }
+                return lines;
+            }, [])
+            .reduce((result, line) => {
+                result.reverse += `${line}\n`
+                return result;
+            }, { reverse: '' })
+    },
+    grammar(source_map) {
+        const source = source_map.schema
+        const source_json = YAML.load(source)
+        const target_json = {}
+        target_json.grammar = source_json.grammar
+        target_json['translator/contextual_suggestions'] = false
+        target_json['translator/max_homophones'] = source_json.translator.max_homophones
+        target_json['translator/max_homographs'] = source_json.translator.max_homographs
+        const target = YAML.dump(target_json)
+        return { grammar: target }
     }
-    const target_map = {};
-    Object.keys(source_map).filter(key => key != 'aux_code')
-        .forEach(key => {
-            const source_lines = source_map[key].split('\n');
-            const target_lines = [];
-            let shift = undefined;
-            while ((shift = source_lines.shift()) != '...' && shift != undefined);
-            source_lines
-                .map(source_line => source_line.trim())
-                .filter(source_line => source_line != '')
-                .filter(source_line => source_line.charAt(0) != '#')
-                .forEach(source_line => {
-                    source_line = source_line.trim();
-                    let data = source_line.split('\t', 3)
-                    let cn = data[0];
-                    let cn_arr = cn.split('');
-                    let en = data[1];
-                    if (en == undefined) {
-                        console.log('line', source_line)
-                    }
-                    let en_arr = en.split(' ');
-                    for (i = 0; i < cn_arr.length && i < en_arr.length; i++) {
-                        en_arr[i] = en_arr[i] + ';' + aux_code_map[cn_arr[i]];
-                    }
-                    if (data.length >= 2) {
-                        target_lines.push([cn, en_arr.join(' '), data[2]].join('\t'))
-                    }
-                })
-            target_map[key] = target_lines.join('\n');
-        })
-    return target_map;
-}
-function numpad_t9_reverse_transform(source_map) {
-    const source_lines = source_map.zi.split('\n');
-    let shift = undefined;
-    while ((shift = source_lines.shift()) != '...' && shift != undefined);
-    const tones = [, 'q', 'w', 'e', 'r', 't']
-    const target_lines = source_lines
-        .map(source_line => source_line.trim())
-        .filter(source_line => source_line != '')
-        .map(source_line => source_line.split('\t'))
-        .map(([cn, en,]) => {
-            let en_tone = en
-                .replace('ü', 'v')
-                .replace(/^([a-z]*)$/g, '$1/5')
-                .replace(/ā(.*)$/g, 'a$1/1')
-                .replace(/á(.*)$/g, 'a$1/2')
-                .replace(/ǎ(.*)$/g, 'a$1/3')
-                .replace(/à(.*)$/g, 'a$1/4')
-                .replace(/ē(.*)$/g, 'e$1/1')
-                .replace(/é(.*)$/g, 'e$1/2')
-                .replace(/ě(.*)$/g, 'e$1/3')
-                .replace(/è(.*)$/g, 'e$1/4')
-                .replace(/ī(.*)$/g, 'i$1/1')
-                .replace(/í(.*)$/g, 'i$1/2')
-                .replace(/ǐ(.*)$/g, 'i$1/3')
-                .replace(/ì(.*)$/g, 'i$1/4')
-                .replace(/ō(.*)$/g, 'o$1/1')
-                .replace(/ó(.*)$/g, 'o$1/2')
-                .replace(/ǒ(.*)$/g, 'o$1/3')
-                .replace(/ò(.*)$/g, 'o$1/4')
-                .replace(/ū(.*)$/g, 'u$1/1')
-                .replace(/ú(.*)$/g, 'u$1/2')
-                .replace(/ǔ(.*)$/g, 'u$1/3')
-                .replace(/ù(.*)$/g, 'u$1/4')
-                .replace(/ǖ(.*)$/g, 'v$1/1')
-                .replace(/ǘ(.*)$/g, 'v$1/2')
-                .replace(/ǚ(.*)$/g, 'v$1/3')
-                .replace(/ǜ(.*)$/g, 'v$1/4')
-                .replace(/ń(.*)$/g, 'n$1/2')
-                .replace(/ň(.*)$/g, 'n$1/3')
-                .replace(/ǹ(.*)$/g, 'n$1/4')
-                .replace(/ḿ(.*)$/g, 'm$1/2')
-                .replace(/m̀(.*)$/g, 'm$1/4')
-                .replace(/^ng\//g, 'eng/')
-                .replace(/^n\//g, 'en/')
-                .replace(/^m\//g, 'me/')
-                .replace('/', '')
-            return en_tone
-        })
-        .map(en_tone => {
-            let en = en_tone.slice(0, -1)
-            let tone = Number(en_tone.slice(-1))
-            if (Number.isNaN(tone)) {
-                console.log(en_tone)
-            }
-            let numbers = [...en].map(en_char => numpad_t9_numbers[en_char]).join('')
-            return [
-                [numbers + tones[tone], en + tone].join('\t'),
-                [numbers, en].join('\t'),
-                [en + tone, numbers + tones[tone]].join('\t'),
-                [en, numbers].join('\t'),
-            ]
-        })
-        .flatMap(item => item)
-        .reduce((acc, current) => {
-            if (acc.indexOf(current) === -1) {
-                acc.push(current);
-            }
-            return acc;
-        }, [])
-    return { reverse: target_lines.join('\n') }
-}
-function grammer_transform(source_map) {
-    const source = source_map.schema
-    const source_json = js_yaml.load(source)
-    const target_json = {}
-    target_json.grammar = source_json.grammar
-    target_json['translator/contextual_suggestions'] = false
-    target_json['translator/max_homophones'] = source_json.translator.max_homophones
-    target_json['translator/max_homographs'] = source_json.translator.max_homographs
-    const target = js_yaml.dump(target_json)
-    return { grammar: target }
-}
-function radical_to_numpad_t9_transform({ radical: source }) {
-    let source_lines = source.split('\n')
-    let shift = undefined;
-    while ((shift = source_lines.shift()) != '...' && shift != undefined);
-    const target_lines = [];
-    source_lines.map(line => line.trim().split('\t'))
-        .forEach(([cn, en]) => {
-            let numbers = en.split('').map(en_char => numpad_t9_numbers[en_char]).join('')
-            target_lines.push([cn, numbers].join('\t'))
-        })
-    return { pc9: target_lines.join('\n') }
 }
 const files = [
-    {
-        // 万象辅助码 => 反查字典
+    {  // 万象辅助码 => 辅助码字典
         source: {
-            aux_code: 'tmp/wanxiang/aux_code.txt',
+            txt: 'tmp/wanxiang/aux_code.txt',
         },
         target: {
-            aux_code: {
-                file: 'dicts/lookup/ZRM-wanxiang.dict.yaml',
-                name: 'ZRM-wanxiang',
+            double_pinyin: {
+                file: 'dicts/lookup/AUX-wanxiang-ZRM_double_pinyin.dict.yaml',
+                name: 'AUX-wanxiang-ZRM_double_pinyin',
             },
+            T93: {
+                file: 'dicts/lookup/AUX-wanxiang-ZRM_T93.dict.yaml',
+                name: 'AUX-wanxiang-ZRM_T93',
+            }
         },
-        transform: lookup_transform,
+        transform: TRANSFORMER.wanxiang_aux_code,
     },
-    {
-        // 万象辅助码字典 => t93形式的辅助码字典
+    {  // 万象辅助码注释 => 注释字典
         source: {
-            aux_code: 'dicts/lookup/ZRM-wanxiang.dict.yaml',
+            txt: 'tmp/wanxiang/zrm_chaifen.txt',
         },
         target: {
-            aux_code: {
-                file: 'dicts/lookup/ZRM-wanxiang_t93.dict.yaml',
-                name: 'ZRM-wanxiang_t93',
+            comment: {
+                file: 'dicts/lookup/AUX-wanxiang-ZRM_comment.dict.yaml',
+                name: 'AUX-wanxiang-ZRM_comment'
             },
         },
-        transform: lookup_t93_transform,
+        transform: TRANSFORMER.wanxiang_aux_code_comment,
     },
-    {
-        // 万象辅助码注释 => 字典
+    {  // PC9的辅助码(拼音拆分)
         source: {
-            chaifen: 'tmp/wanxiang/zrm_chaifen.txt',
+            radical: 'dicts/lookup/radical_pinyin.dict.yaml',
         },
         target: {
-            aux_comment: {
-                file: 'dicts/lookup/ZRM-wanxiang_comment.dict.yaml',
-                name: 'ZRM-wanxiang_comment'
+            PC9: {
+                file: 'dicts/lookup/AUX-radical_pinyin_PC9.dict.yaml',
+                name: 'AUX-radical_pinyin_PC9'
             },
         },
-        transform: chaifen_transform,
+        transform: TRANSFORMER.PC9_aux_code,
     },
-    {
+    /** 
+    { // 万象pro
         source: {
-            radical: 'dicts/lookup/radical.dict.yaml',
+            aux_txt: 'tmp/wanxiang/aux_code.txt',
+            zi: 'dicts/wanxiang/zi.dict.yaml',
+            jichu: 'dicts/wanxiang/jichu.dict.yaml',
+            lianxiang: 'dicts/wanxiang/lianxiang.dict.yaml',
+            cuoyin: 'dicts/wanxiang/cuoyin.dict.yaml',
+            duoyin: 'dicts/wanxiang/duoyin.dict.yaml',
+            shici: 'dicts/wanxiang/shici.dict.yaml',
+            diming: 'dicts/wanxiang/diming.dict.yaml',
         },
         target: {
-            pc9: {
-                file: 'dicts/lookup/radical_numpad_t9.dict.yaml',
-                name: 'radical_numpad_t9'
-            },
+            zi: { file: 'dicts/wanxiang/zi.pro.dict.yaml', name: 'zi' },
+            jichu: { file: 'dicts/wanxiang/jichu.pro.dict.yaml', name: 'jichu' },
+            lianxiang: { file: 'dicts/wanxiang/lianxiang.pro.dict.yaml', name: 'lianxiang' },
+            cuoyin: { file: 'dicts/wanxiang/cuoyin.pro.dict.yaml', name: 'cuoyin' },
+            duoyin: { file: 'dicts/wanxiang/duoyin.pro.dict.yaml', name: 'duoyin' },
+            shici: { file: 'dicts/wanxiang/shici.pro.dict.yaml', name: 'shici' },
+            diming: { file: 'dicts/wanxiang/diming.pro.dict.yaml', name: 'diming' },
         },
-        transform: radical_to_numpad_t9_transform,
+        transform: TRANSFORMER.wanxiang_pro,
     },
-    // {
-    //     // 万象pro
-    //     source: {
-    //         aux_code: 'tmp/wanxiang/aux_code.txt',
-    //         zi: 'dicts/wanxiang/zi.dict.yaml',
-    //         jichu: 'dicts/wanxiang/jichu.dict.yaml',
-    //         lianxiang: 'dicts/wanxiang/lianxiang.dict.yaml',
-    //         cuoyin: 'dicts/wanxiang/cuoyin.dict.yaml',
-    //         duoyin: 'dicts/wanxiang/duoyin.dict.yaml',
-    //         shici: 'dicts/wanxiang/shici.dict.yaml',
-    //         diming: 'dicts/wanxiang/diming.dict.yaml',
-    //     },
-    //     target: {
-    //         zi: { file: 'dicts/wanxiang/zi.pro.dict.yaml', name: 'zi' },
-    //         jichu: { file: 'dicts/wanxiang/jichu.pro.dict.yaml', name: 'jichu' },
-    //         lianxiang: { file: 'dicts/wanxiang/lianxiang.pro.dict.yaml', name: 'lianxiang' },
-    //         cuoyin: { file: 'dicts/wanxiang/cuoyin.pro.dict.yaml', name: 'cuoyin' },
-    //         duoyin: { file: 'dicts/wanxiang/duoyin.pro.dict.yaml', name: 'duoyin' },
-    //         shici: { file: 'dicts/wanxiang/shici.pro.dict.yaml', name: 'shici' },
-    //         diming: { file: 'dicts/wanxiang/diming.pro.dict.yaml', name: 'diming' },
-    //     },
-    //     transform: wanxiang_pro_transform,
-    // },
-    {
-        // 万象 => 小键盘t9反查字典(数字查拼音 拼音查数字)
+    */
+    {   // 万象 => 小键盘t9反查字典(数字查拼音 拼音查数字)
         source: {
             zi: 'dicts/wanxiang/zi.dict.yaml',
         },
         target: {
             reverse: {
-                file: 'dicts/lookup/numpad_t9_reverse_pinyin.dict.yaml',
-                name: 'numpad_t9_reverse_pinyin',
+                file: 'dicts/lookup/REVERSE_PC9.dict.yaml',
+                name: 'REVERSE_PC9',
             },
         },
-        transform: numpad_t9_reverse_transform,
+        transform: TRANSFORMER.PC9_reverse,
     },
-    {
-        // 万象方案 => 万象模型参数
+    {   // 万象方案 => 万象模型参数
         source: {
             schema: 'tmp/wanxiang/wanxiang.schema.yaml',
         },
         target: {
             grammar: {
-                file: 'grammar.yaml',
+                file: 'imr_grammar.yaml',
                 is_dict: false,
             },
         },
-        transform: grammer_transform,
+        transform: TRANSFORMER.grammar,
     }
 ]
 
-const { log } = require('console');
 // 读取ZRM_wanxiang.dict.yaml文件并处理
 
 function work() {

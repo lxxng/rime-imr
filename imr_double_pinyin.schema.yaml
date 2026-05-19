@@ -313,5 +313,5 @@ aux:
     db: imr_aux_code_comment
 
 __patch:
-  grammar.yaml:/
+  imr_grammar:/
 

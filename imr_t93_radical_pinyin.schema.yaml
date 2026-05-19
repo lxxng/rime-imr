@@ -2,11 +2,11 @@
 # encoding: utf-8
 
 schema:
-  schema_id: imr_t93_radical_pinyin
-  name: imr-t93-拼音反查
+  schema_id: imr_T93_radical_pinyin
+  name: imr-T93-拼音反查
   version: zzz
 speller:
   algebra:
-    __include: imr_config.yaml:/speller/algebra/radical_t93
+    __include: imr_config.yaml:/speller/algebra/imr_T93_radical_pinyin
 translator:
-  dictionary: imr_t93_radical_pinyin
+  dictionary: imr_T93_radical_pinyin

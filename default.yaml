@@ -9,8 +9,8 @@ config_version: '2026-02-06'
 # 方案列表
 schema_list:
   - schema: imr_double_pinyin
-  - schema: imr_t93
-  - schema: imr_numpad_t9
+  - schema: imr_T93
+  - schema: imr_PC9
 
 
 # 菜单

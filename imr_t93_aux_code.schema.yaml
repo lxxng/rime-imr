@@ -2,8 +2,8 @@
 # encoding: utf-8
 
 schema:
-  schema_id: imr_t93_aux_code
-  name: imr-t93-辅助码
+  schema_id: imr_T93_aux_code
+  name: imr-T93-辅助码
   version: zzz
 translator:
-  dictionary: imr_t93_aux_code
+  dictionary: imr_T93_aux_code

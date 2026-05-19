@@ -34,7 +34,7 @@ local Processor = {
                 local text = ignore_word(context.input:sub(1, context.caret_pos))
                 if text == '' or text == '`' then
                     -- 在最后加`
-                    local caret_pos = context.caret_pos
+                    local caret_pos = context.caret_pos == #context.input and #context.input + 1 or context.caret_pos
                     context.input = context.input .. '`'
                     context.caret_pos = caret_pos
                     return 1

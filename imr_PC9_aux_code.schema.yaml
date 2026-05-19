@@ -1,0 +1,9 @@
+# Rime schema settings
+# encoding: utf-8
+
+schema:
+  schema_id: imr_PC9_aux_code
+  name: imr-PC9-辅助码
+  version: zzz
+translator:
+  dictionary: imr_PC9_aux_code

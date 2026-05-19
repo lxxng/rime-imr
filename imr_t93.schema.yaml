@@ -16,7 +16,7 @@ t9:
   isDisplayOriginalPreedit: true
 
 schema:
-  schema_id: imr_t93
+  schema_id: imr_T93
   name: IMR-九键三拼
   version: "alpha"
   author:
@@ -29,14 +29,14 @@ schema:
     通过第三键实现字母定位
   dependencies:
     # - melt_eng # 英文输入，作为次翻译器挂载到拼音方案
-    - imr_t93_radical_pinyin
-    - imr_t93_stroke
-    - imr_t93_aux_code
+    - imr_T93_radical_pinyin
+    - imr_T93_stroke
+    - imr_T93_aux_code
     - imr_aux_code_comment
 
 engine:
   processors:
-    - lua_processor@*imr.t93_processor
+    - lua_processor@*imr.T93_processor
     - lua_processor@*imr.select_char*Processor
     - ascii_composer
     - recognizer
@@ -72,7 +72,7 @@ engine:
     - simplifier@traditionalize # 简繁切换
     - lua_filter@*imr.aux_code
     - lua_filter@*imr.select_char*Filter
-    - lua_filter@*imr.t93_filter
+    - lua_filter@*imr.T93_filter
     - uniquifier # 去重
 
 calculator:
@@ -88,13 +88,13 @@ recognizer:
     stroke_lookup: '^05[0-9]+$'
 
 translator:
-  prism: imr_t93
+  prism: imr_T93
   dictionary: wanxiang
   spelling_hints: none
   comment_format: []
   # 显示原始输入
   preedit_format:
-    __include: imr_config:/translator/preedit_format/imr_t93
+    __include: imr_config:/translator/preedit_format/imr_T93
 
 # 自定义短语：custom_phrase_t9.txt
 # ⚠️ 编码要用数字
@@ -128,29 +128,29 @@ speller:
   initials: 0123456789
   delimiter: " '"  # 第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
   algebra:
-    __include: imr_config.yaml:/speller/algebra/imr_t93
+    __include: imr_config.yaml:/speller/algebra/imr_T93
 
 # 反查
 radical_lookup:
   tag: radical_lookup
-  dictionary: imr_t93_radical_pinyin
+  dictionary: imr_T93_radical_pinyin
   enable_user_dict: false
   prefix: "03"  # 反查前缀（反查时前缀会消失影响打英文所以设定为两个字母，或可改成一个非字母符号），与 recognizer/patterns/radical_lookup 匹配
   tips: "  〔拆字〕"
   comment_format:
     - erase/^.*$//
   preedit_format:
-    __include: imr_config:/translator/preedit_format/imr_t93_radical_lookup
+    __include: imr_config:/translator/preedit_format/imr_T93_radical_lookup
 stroke_lookup:
   tag: stroke_lookup
-  dictionary: imr_t93_stroke
+  dictionary: imr_T93_stroke
   enable_user_dict: false
   prefix: "05"  # 反查前缀（反查时前缀会消失影响打英文所以设定为两个字母，或可改成一个非字母符号），与 recognizer/patterns/radical_lookup 匹配
   tips: "  〔笔画〕"
   comment_format:
     - erase/^.*$//
   preedit_format:
-    __include: imr_config:/translator/preedit_format/imr_t93_stroke_lookup
+    __include: imr_config:/translator/preedit_format/imr_T93_stroke_lookup
 
 # 拆字滤镜
 reverse_lookup:
@@ -164,7 +164,7 @@ aux:
     # default: '`'
     learn: '`'
     no_learn: '``'
-  db: imr_t93_aux_code
+  db: imr_T93_aux_code
   length: 3
   comment:
     enable: true
@@ -174,4 +174,4 @@ menu:
   alternative_select_keys: ABCDEFGHIJ
 
 __patch:
-  grammar.yaml:/
+  imr_grammar:/

@@ -1,18 +1,18 @@
 schema:
-  schema_id: imr_numpad_t9
+  schema_id: imr_PC9
   name: IMR-小键盘九键
   version: alpha
   description: |
     PC小键盘九键输入方案
   dependencies:
-    - imr_numpad_t9_reverse_pinyin
-    - imr_numpad_t9_radical_pinyin
-    - imr_numpad_t9_stroke
-    - imr_numpad_t9_aux_code
+    - imr_PC9_REVERSE
+    - imr_PC9_radical_pinyin
+    - imr_PC9_stroke
+    - imr_PC9_aux_code
 
 engine:
   processors:
-    - lua_processor@*imr.numpad_processor
+    - lua_processor@*imr.PC9_processor
     - ascii_composer
     - recognizer
     - key_binder
@@ -49,14 +49,14 @@ recognizer:
     stroke_lookup: "^75[0-9]+$"
 
 translator:
-  prism: imr_numpad_t9
+  prism: imr_PC9
   dictionary: wanxiang
   enable_word_completion: true # 大于 4 音节的词条自动补全，librime > 1.11.2
   spelling_hints: 8            # corrector.lua ：为了让错音错字提示的 Lua 同时适配全拼双拼，将拼音显示在 comment 中
   always_show_comments: true   # corrector.lua ：Rime 默认在 preedit 等于 comment 时取消显示 comment，这里强制一直显示，供 corrector.lua 做判断用。
   initial_quality: 1.2         # 拼音的权重应该比英文大
   preedit_format:              # preedit_format 影响到输入框的显示和“Shift+回车”上屏的字符
-    __include: imr_config:/translator/preedit_format/imr_numpad_t9
+    __include: imr_config:/translator/preedit_format/imr_PC9
   comment_format:
     __include: imr_config:/translator/comment_format/万象
 
@@ -131,11 +131,11 @@ speller:
   initials: 123456789[
   delimiter: " 7"        # 系统配置，第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
   algebra:
-    __include: imr_config:/speller/algebra/imr_numpad_t9
+    __include: imr_config:/speller/algebra/imr_PC9
 # 部件拆字反查
 radical_lookup:
   tag: radical_lookup
-  dictionary: imr_numpad_t9_radical_pinyin
+  dictionary: imr_PC9_radical_pinyin
   enable_sentence: false
   enable_user_dict: false
   prefix: "77"  # 反查前缀（反查时前缀会消失影响打英文所以设定为两个字母，或可改成一个非字母符号），与 recognizer/patterns/radical_lookup 匹配
@@ -144,14 +144,14 @@ radical_lookup:
 # 笔画拆字反查
 stroke_lookup:
   tag: stroke_lookup
-  dictionary: imr_numpad_t9_stroke
+  dictionary: imr_PC9_stroke
   enable_sentence: false
   enable_user_dict: false
   prefix: "75"  # 反查前缀（反查时前缀会消失影响打英文所以设定为两个字母，或可改成一个非字母符号），与 recognizer/patterns/radical_lookup 匹配
   comment_format:
     - erase/^.*$//
   preedit_format:
-    __include: imr_config:/translator/preedit_format/imr_numpad_t9_stroke
+    __include: imr_config:/translator/preedit_format/imr_PC9_stroke
 
 # 部件拆字滤镜
 reverse_lookup:
@@ -172,10 +172,10 @@ aux:
   trigger:
     # default: '`'
     learn: '`'
-  db: imr_numpad_t9_aux_code
+  db: imr_PC9_aux_code
   length: 0
   comment:
     enable: false
 
 __patch:
-  grammar.yaml:/
+  imr_grammar:/

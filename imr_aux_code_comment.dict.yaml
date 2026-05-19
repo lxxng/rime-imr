@@ -8,5 +8,5 @@
 name: imr_aux_code_comment
 version: zzz
 import_tables:
-  - dicts/lookup/ZRM-wanxiang_comment
+  - dicts/lookup/AUX-wanxiang-ZRM_comment
 ...

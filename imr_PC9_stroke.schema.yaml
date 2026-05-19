@@ -2,11 +2,10 @@
 # encoding: utf-8
 
 schema:
-  schema_id: imr_numpad_t9_stroke
-  name: imr-numpad-t9-五笔画
+  schema_id: imr_PC9_stroke
   version: zzz
 speller:
   algebra:
     - xlit/hspnz/62135/
 translator:
-  dictionary: imr_numpad_t9_stroke
+  dictionary: imr_PC9_stroke

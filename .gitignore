@@ -23,7 +23,7 @@ rime_deployer
 rime_patch
 
 wanxiang-lts-zh-hans.gram
-grammar.yaml
+imr_grammar.yaml
 dicts/*
 tmp/*
 etags/*
