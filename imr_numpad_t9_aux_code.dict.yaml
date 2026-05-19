@@ -1,0 +1,12 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# imr_double_pinyin的辅助码
+#
+
+---
+name: imr_numpad_t9_aux_code
+version: zzz
+import_tables:
+  - dicts/lookup/ZRM-pc9
+...

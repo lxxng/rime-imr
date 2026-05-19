@@ -8,6 +8,7 @@ schema:
     - imr_numpad_t9_reverse_pinyin
     - imr_numpad_t9_radical_pinyin
     - imr_numpad_t9_stroke
+    - imr_numpad_t9_aux_code
 
 engine:
   processors:
@@ -36,6 +37,7 @@ engine:
     - lua_translator@*force_gc           # 暴力 GC
   filters:
     - reverse_lookup_filter@reverse_lookup  # 部件拆字滤镜
+    - lua_filter@*imr.aux_code
     - uniquifier # 去重
 
 
@@ -125,7 +127,7 @@ key_binder:
     - {accept: KP_Enter, send: Return, when: has_menu}
   import_preset: default
 speller:
-  alphabet: 123456789abcdefghijklmnopqrstuvwxyz[]
+  alphabet: 123456789abcdefghijklmnopqrstuvwxyz[]`
   initials: 123456789[
   delimiter: " 7"        # 系统配置，第一位<空格>是拼音之间的分隔符；第二位<'>表示可以手动输入单引号来分割拼音。
   algebra:
@@ -165,6 +167,15 @@ reverse_lookup:
 #   horizontal: false  # 候选项横排：true；false
 menu:
   page_size: 9  # 候选词个数
+  
+aux:
+  trigger:
+    # default: '`'
+    learn: '`'
+  db: imr_numpad_t9_aux_code
+  length: 0
+  comment:
+    enable: false
 
 __patch:
   grammar.yaml:/

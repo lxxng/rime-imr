@@ -237,6 +237,18 @@ function grammer_transform(source_map) {
     const target = js_yaml.dump(target_json)
     return { grammar: target }
 }
+function radical_to_numpad_t9_transform({ radical: source }) {
+    let source_lines = source.split('\n')
+    let shift = undefined;
+    while ((shift = source_lines.shift()) != '...' && shift != undefined);
+    const target_lines = [];
+    source_lines.map(line => line.trim().split('\t'))
+        .forEach(([cn, en]) => {
+            let numbers = en.split('').map(en_char => numpad_t9_numbers[en_char]).join('')
+            target_lines.push([cn, numbers].join('\t'))
+        })
+    return { pc9: target_lines.join('\n') }
+}
 const files = [
     {
         // 万象辅助码 => 反查字典
@@ -276,6 +288,18 @@ const files = [
             },
         },
         transform: chaifen_transform,
+    },
+    {
+        source: {
+            radical: 'dicts/lookup/radical.dict.yaml',
+        },
+        target: {
+            pc9: {
+                file: 'dicts/lookup/radical_numpad_t9.dict.yaml',
+                name: 'radical_numpad_t9'
+            },
+        },
+        transform: radical_to_numpad_t9_transform,
     },
     // {
     //     // 万象pro

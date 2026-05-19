@@ -68,7 +68,6 @@ function AuxFilter.init(env)
     local config = engine.schema.config
 
     AuxFilter.db = ReverseLookup(config:get_string('aux/db'))
-    AuxFilter.comment_db = ReverseLookup(config:get_string('aux/comment/db'))
 
     -- 双触发键：learn 与 no_learn
     env.learn_trigger = normalize_trigger(config:get_string("aux/trigger/default"), nil)
@@ -106,6 +105,7 @@ function AuxFilter.init(env)
         env.show_comment = false
     else
         env.show_comment = true
+        AuxFilter.comment_db = ReverseLookup(config:get_string('aux/comment/db'))
     end
 
     ----------------------------
@@ -210,7 +210,7 @@ local function find_phrase_match(word, _auxStr, length)
     local match_count = 0
     for _, codePoint in utf8.codes(word) do
         local char = utf8.char(codePoint)
-        local this_aux = auxStr:sub(1, length)
+        local this_aux = length == 0 and auxStr or auxStr:sub(1, length)
         auxStr = auxStr:sub(#this_aux + 1)
         if not char_matches_aux(char, this_aux) then
             return 0
@@ -352,15 +352,17 @@ function AuxFilter.func(input, env)
         elseif #auxStr > 0 and is_phrase_candidate(cand) then
             local matched_count = find_phrase_match(cand.text, auxStr, env.length)
             -- 仅词组候选显示命中提示，单字继续沿用“显示全部辅码”。
-            if matched_count > 0 and env.show_comment then
-                local lookup_char = utf8.char_at(cand.text, matched_count)
-                assert(lookup_char)
-                local auxCodes = AuxFilter.comment_db:lookup(lookup_char)
-                local hint_char = ''
-                if is_multi_char_text(cand.text) then
-                    hint_char = lookup_char
+            if matched_count > 0 then
+                if env.show_comment then
+                    local lookup_char = utf8.char_at(cand.text, matched_count)
+                    assert(lookup_char)
+                    local auxCodes = AuxFilter.comment_db:lookup(lookup_char)
+                    local hint_char = ''
+                    if is_multi_char_text(cand.text) then
+                        hint_char = lookup_char
+                    end
+                    cand = append_comment(cand, auxCodes, hint_char)
                 end
-                cand = append_comment(cand, auxCodes, hint_char)
                 table.insert(first_exact_bucket, cand)
             end
 
