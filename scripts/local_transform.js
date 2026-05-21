@@ -81,22 +81,6 @@ const TRANSFORMER = {
                 return result
             }, { comment: '' })
     },
-    PC9_aux_code({ radical: source_context }) {
-        let source_lines = source_context.split('\n')
-        let shift = undefined;
-        while ((shift = source_lines.shift()) != '...' && shift != undefined);
-        return source_lines
-            .map(line => line.trim())
-            .filter(line => line)
-            .filter(line => line.charAt(0) != '#')
-            .map(line => line.split('\t'))
-            .map(([cn, en]) => [cn, en.split('').map(en_char => PC9_EN_NUM[en_char]).join('')])
-            .reduce((result, [cn, numbers]) => {
-                result.PC9 += `${cn}\t${numbers}\n`
-                return result;
-            }, { PC9: '' })
-        return { PC9: target_lines.join('\n') }
-    },
     wanxiang_pro(source_map) {
         const aux_map = source_map.aux_txt.split('\n')
             .map(line => line.trim())
@@ -253,18 +237,6 @@ const files = [
             },
         },
         transform: TRANSFORMER.wanxiang_aux_code_comment,
-    },
-    {  // PC9的辅助码(拼音拆分)
-        source: {
-            radical: 'dicts/lookup/radical_pinyin.dict.yaml',
-        },
-        target: {
-            PC9: {
-                file: 'dicts/lookup/AUX-radical_pinyin_PC9.dict.yaml',
-                name: 'AUX-radical_pinyin_PC9'
-            },
-        },
-        transform: TRANSFORMER.PC9_aux_code,
     },
     /** 
     { // 万象pro
