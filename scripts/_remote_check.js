@@ -74,13 +74,75 @@ async function syncViaConditionalRequest(url, localPath) {
     }
     console.log('[下载]', localPath)
     // 写入文件
-    const buffer = Buffer.from(await response.arrayBuffer());
-    fs.writeFileSync(localPath, buffer);
-    console.log('文件已保存到', localPath);
+    const buffer = Buffer.from(await downloadWithProgress(response));
+    try {
+        fs.writeFileSync(localPath, buffer);
+        console.log('文件已保存到', localPath);
+    } catch (error) {
+        console.error('保存文件时出错：', error);
+        fs.writeFileSync(localPath + '.tmp', buffer);
+        console.log('文件已保存到', localPath + '.tmp');
+    }
     saveETag(localPath, newETag);
     console.log(`[更新] 新 ETag: ${newETag}`);
     console.log('=============================')
     return true;
+}
+
+async function downloadWithProgress(response) {
+    // 1. 获取总大小
+    const contentLength = response.headers.get('content-length');
+    const total = contentLength ? parseInt(contentLength, 10) : null;
+
+    // 无法获知总大小则直接回退（可选：也可以继续流式下载但不打印进度）
+    if (!total) {
+        return response.arrayBuffer();
+    }
+
+    const reader = response.body.getReader();
+    const chunks = [];
+    let received = 0;
+    let startTime = null;          // 首次收到数据的时间
+    let lastPrintTime = null;     // 上次打印的时间
+    const INTERVAL_MS = 2000;
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        // 记录首次收到数据的时间
+        if (startTime === null) {
+            startTime = Date.now();
+        }
+
+        chunks.push(value);
+        received += value.length;
+
+        const now = Date.now();
+        // 首次打印至少要在开始 2 秒后，且距离上次打印 ≥ 2 秒
+        if (startTime !== null && now - startTime >= INTERVAL_MS) {
+            if (lastPrintTime === null || now - lastPrintTime >= INTERVAL_MS) {
+                const percent = ((received / total) * 100).toFixed(1);
+                const downloadedMB = (received / (1024 * 1024)).toFixed(1);
+                const totalMB = (total / (1024 * 1024)).toFixed(1);
+                console.log(`下载进度: ${percent}% (${downloadedMB} MB / ${totalMB} MB)`);
+                lastPrintTime = now;
+            }
+        }
+    }
+
+    // （可选）下载完成后的最终提示，如果你希望即使小文件也提示一句可取消注释
+    // const totalMB = (total / (1024 * 1024)).toFixed(1);
+    // console.log(`下载完成 (${totalMB} MB)`);
+
+    // 合并所有块为 ArrayBuffer
+    const buffer = new Uint8Array(received);
+    let offset = 0;
+    for (const chunk of chunks) {
+        buffer.set(chunk, offset);
+        offset += chunk.length;
+    }
+    return buffer.buffer;
 }
 
 
